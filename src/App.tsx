@@ -11,6 +11,7 @@ import PostClassified from "@/pages/PostClassified";
 import SignUp from "@/pages/SignUp";
 import Login from "@/pages/Login";
 import Overview from "@/pages/dashboard/Overview";
+import ProductDetail from "@/pages/ProductDetail";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ function App() {
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/dashboard" element={<Overview />} />
+                <Route path="/products/:id" element={<ProductDetail />} />
               </Routes>
             </main>
             <Footer />
