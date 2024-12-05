@@ -22,30 +22,16 @@ export default function ProductDetail() {
         .from("products")
         .select(`
           *,
-          business:profiles(full_name)
+          business:profiles!products_business_id_fkey (full_name)
         `)
-        .eq('id', id)
+        .eq("id", id)
         .single();
 
       if (error) throw error;
       return data;
     },
-    enabled: !!id, // Only run query if we have an ID
+    enabled: !!id,
   });
-
-  const handleAddToCart = () => {
-    toast({
-      title: "Coming Soon",
-      description: "Shopping cart functionality will be available soon!",
-    });
-  };
-
-  const handleGenerateAffiliateLink = async () => {
-    toast({
-      title: "Coming Soon",
-      description: "Affiliate link generation will be available soon!",
-    });
-  };
 
   if (isLoading) {
     return (
@@ -124,7 +110,12 @@ export default function ProductDetail() {
           </Card>
 
           <div className="space-y-3">
-            <Button className="w-full" size="lg" onClick={handleAddToCart}>
+            <Button className="w-full" size="lg" onClick={() => {
+              toast({
+                title: "Coming Soon",
+                description: "Shopping cart functionality will be available soon!",
+              });
+            }}>
               <ShoppingCart className="mr-2 h-5 w-5" />
               Add to Cart
             </Button>
@@ -134,7 +125,12 @@ export default function ProductDetail() {
                 variant="outline"
                 className="w-full"
                 size="lg"
-                onClick={handleGenerateAffiliateLink}
+                onClick={() => {
+                  toast({
+                    title: "Coming Soon",
+                    description: "Affiliate link generation will be available soon!",
+                  });
+                }}
               >
                 <Share2 className="mr-2 h-5 w-5" />
                 Generate Affiliate Link
