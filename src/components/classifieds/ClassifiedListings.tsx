@@ -8,6 +8,24 @@ interface ClassifiedListingsProps {
   selectedLocation: string;
 }
 
+// Define the shape of contact info
+interface ContactInfo {
+  phone?: string;
+  whatsapp?: string;
+}
+
+// Define the shape of a classified ad
+interface ClassifiedAd {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  location: string;
+  price: number;
+  image_urls: string[];
+  contact_info: ContactInfo;
+}
+
 export function ClassifiedListings({
   searchQuery,
   selectedCategory,
@@ -47,7 +65,7 @@ export function ClassifiedListings({
       }
 
       console.log("Fetched classifieds:", data);
-      return data;
+      return data as ClassifiedAd[];
     },
   });
 
