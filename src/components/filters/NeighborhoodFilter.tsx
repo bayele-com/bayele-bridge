@@ -13,7 +13,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import type { Database } from "@/integrations/supabase/types";
@@ -29,7 +29,7 @@ interface NeighborhoodFilterProps {
 export function NeighborhoodFilter({ city, neighborhoodId, setNeighborhoodId }: NeighborhoodFilterProps) {
   const [open, setOpen] = useState(false);
 
-  const { data: neighborhoods, isLoading } = useQuery({
+  const { data: neighborhoods = [], isLoading } = useQuery({
     queryKey: ["neighborhoods", city],
     queryFn: async () => {
       console.log("Fetching neighborhoods for city:", city);
@@ -44,7 +44,7 @@ export function NeighborhoodFilter({ city, neighborhoodId, setNeighborhoodId }: 
         throw error;
       }
       console.log("Fetched neighborhoods:", data);
-      return data as (Neighborhood & { districts: { name: string } | null })[];
+      return (data || []) as (Neighborhood & { districts: { name: string } | null })[];
     },
     enabled: !!city,
   });
@@ -61,12 +61,20 @@ export function NeighborhoodFilter({ city, neighborhoodId, setNeighborhoodId }: 
             role="combobox"
             aria-expanded={open}
             className="w-full justify-between"
+            disabled={isLoading}
           >
-            {neighborhoodId === "all" 
-              ? "All Neighborhoods"
-              : selectedNeighborhood 
-                ? `${selectedNeighborhood.name}${selectedNeighborhood.districts?.name ? ` (${selectedNeighborhood.districts.name})` : ''}`
-                : "Select neighborhood..."}
+            {isLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Loading...</span>
+              </>
+            ) : neighborhoodId === "all" ? (
+              "All Neighborhoods"
+            ) : selectedNeighborhood ? (
+              `${selectedNeighborhood.name}${selectedNeighborhood.districts?.name ? ` (${selectedNeighborhood.districts.name})` : ''}`
+            ) : (
+              "Select neighborhood..."
+            )}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -90,7 +98,7 @@ export function NeighborhoodFilter({ city, neighborhoodId, setNeighborhoodId }: 
                 />
                 All Neighborhoods
               </CommandItem>
-              {neighborhoods?.map((neighborhood) => (
+              {neighborhoods.map((neighborhood) => (
                 <CommandItem
                   key={neighborhood.id}
                   value={neighborhood.name.toLowerCase()}
