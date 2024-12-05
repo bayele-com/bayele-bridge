@@ -63,6 +63,7 @@ export function PropertyDetailsFields({ form }: PropertyDetailsFieldsProps) {
                 </FormControl>
                 <SelectContent>
                   <SelectItem value="apartment">Apartment</SelectItem>
+                  <SelectItem value="furnished-apartment">Furnished apartment</SelectItem>
                   <SelectItem value="house">House</SelectItem>
                   <SelectItem value="studio">Studio</SelectItem>
                   <SelectItem value="room">Room</SelectItem>

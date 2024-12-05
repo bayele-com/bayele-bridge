@@ -5,14 +5,16 @@ import { PropertyFormValues } from "./types";
 
 interface ManagementOptionsFieldsProps {
   form: UseFormReturn<PropertyFormValues>;
-  fees: {
-    self: number;
-    bayele: number;
-  };
 }
 
-export function ManagementOptionsFields({ form, fees }: ManagementOptionsFieldsProps) {
+export function ManagementOptionsFields({ form }: ManagementOptionsFieldsProps) {
   const managementType = form.watch("managementType");
+  const basePrice = form.watch("price") || 0;
+
+  const fees = {
+    self: 4500,
+    bayele: basePrice * 0.15,
+  };
 
   return (
     <div className="space-y-4">
@@ -35,7 +37,7 @@ export function ManagementOptionsFields({ form, fees }: ManagementOptionsFieldsP
                   <label htmlFor="self" className="flex-1">
                     <div className="font-medium">Self Manage</div>
                     <div className="text-sm text-muted-foreground">
-                      3,500 FCFA monthly fee
+                      4,500 FCFA monthly fee
                     </div>
                   </label>
                 </div>
@@ -44,14 +46,18 @@ export function ManagementOptionsFields({ form, fees }: ManagementOptionsFieldsP
                   <label htmlFor="bayele" className="flex-1">
                     <div className="font-medium">Bayele Manages</div>
                     <div className="text-sm text-muted-foreground">
-                      2,500 FCFA monthly + 30% of one month's rent
+                      15% fee for every paid booking
                     </div>
                   </label>
                 </div>
               </RadioGroup>
             </FormControl>
             <FormDescription>
-              Total fee: {fees[managementType].toLocaleString()} FCFA
+              {managementType === "self" ? (
+                <>Fixed fee: {fees.self.toLocaleString()} FCFA per month</>
+              ) : (
+                <>Fee per booking: {fees.bayele.toLocaleString()} FCFA ({(15).toLocaleString()}% of rent)</>
+              )}
             </FormDescription>
             <FormMessage />
           </FormItem>

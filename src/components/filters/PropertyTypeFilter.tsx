@@ -21,11 +21,11 @@ export function PropertyTypeFilter({ propertyType, setPropertyType }: PropertyTy
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Types</SelectItem>
-          <SelectItem value="Apartment">Apartment</SelectItem>
-          <SelectItem value="Furnished apartment">Furnished apartment</SelectItem>
-          <SelectItem value="House">House</SelectItem>
-          <SelectItem value="Studio">Studio</SelectItem>
-          <SelectItem value="Room">Room</SelectItem>
+          <SelectItem value="apartment">Apartment</SelectItem>
+          <SelectItem value="furnished-apartment">Furnished apartment</SelectItem>
+          <SelectItem value="house">House</SelectItem>
+          <SelectItem value="studio">Studio</SelectItem>
+          <SelectItem value="room">Room</SelectItem>
         </SelectContent>
       </Select>
     </div>
