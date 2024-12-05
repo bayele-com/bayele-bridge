@@ -23,6 +23,9 @@ const checkoutFormSchema = z.object({
   email: z.string().email("Invalid email address"),
   phone: z.string().min(9, "Phone number must be at least 9 digits"),
   address: z.string().min(10, "Please provide a complete address"),
+  city: z.string().min(2, "City is required"),
+  state: z.string().min(2, "State is required"),
+  zipcode: z.string().min(2, "Zipcode is required"),
   notes: z.string().optional(),
 });
 
@@ -41,6 +44,9 @@ export default function Checkout() {
       email: "",
       phone: "",
       address: "",
+      city: "",
+      state: "",
+      zipcode: "",
       notes: "",
     },
   });
@@ -66,7 +72,7 @@ export default function Checkout() {
     }
 
     try {
-      // Create the order
+      // Create the order with required commission_amount
       const { data: order, error: orderError } = await supabase
         .from("orders")
         .insert({
@@ -74,13 +80,15 @@ export default function Checkout() {
           total_amount: state.total,
           status: "pending",
           payment_status: "pending",
+          commission_amount: 0, // Set default commission amount
+          product_id: state.items[0].id, // Assuming single product checkout for now
         })
         .select()
         .single();
 
       if (orderError) throw orderError;
 
-      // Create order details
+      // Create order details with complete delivery address
       const { error: detailsError } = await supabase
         .from("order_details")
         .insert({
@@ -91,6 +99,9 @@ export default function Checkout() {
           notes: data.notes,
           delivery_address: {
             address: data.address,
+            city: data.city,
+            state: data.state,
+            zipcode: data.zipcode,
           },
         });
 
@@ -223,12 +234,54 @@ export default function Checkout() {
                 name="address"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Delivery Address</FormLabel>
+                    <FormLabel>Street Address</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Enter your complete delivery address"
+                        placeholder="Enter your street address"
                         {...field}
                       />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>City</FormLabel>
+                    <FormControl>
+                      <Input placeholder="City" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="state"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>State/Region</FormLabel>
+                    <FormControl>
+                      <Input placeholder="State or Region" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="zipcode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Postal Code</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Postal Code" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
