@@ -12,8 +12,9 @@ import {
 } from "@/components/ui/table";
 import { toast } from "@/components/ui/use-toast";
 import { Loader2, CheckCircle, XCircle } from "lucide-react";
+import { Database } from "@/integrations/supabase/types";
 
-interface PendingAd {
+type PendingAd = {
   id: string;
   title: string;
   category: string;
@@ -23,9 +24,7 @@ interface PendingAd {
   status: string;
 }
 
-type AdminPendingAdUpdate = {
-  status: 'approve' | 'reject';
-}
+type AdminPendingAdUpdate = Database['public']['Tables']['admin_pending_ads']['Update'];
 
 export default function Moderation() {
   const { data: pendingItems = [], isLoading, refetch } = useQuery({
@@ -46,7 +45,7 @@ export default function Moderation() {
     try {
       const { error } = await supabase
         .from("admin_pending_ads")
-        .update({ status: action } satisfies AdminPendingAdUpdate)
+        .update({ status: action })
         .in("id", ids);
 
       if (error) throw error;
