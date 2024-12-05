@@ -1,6 +1,3 @@
-import { Navigation } from "@/components/Navigation";
-import { Footer } from "@/components/Footer";
-import { PropertyCard } from "@/components/PropertyCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Home, ShoppingBag, FileText, TrendingUp, Search } from "lucide-react";
@@ -47,8 +44,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navigation />
-      
       {/* Hero Section */}
       <section className="relative pt-32 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Background Pattern */}
@@ -179,8 +174,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 };

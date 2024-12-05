@@ -10,8 +10,8 @@ import Classifieds from "@/pages/Classifieds";
 import PostClassified from "@/pages/PostClassified";
 import SignUp from "@/pages/SignUp";
 import Login from "@/pages/Login";
+import Overview from "@/pages/dashboard/Overview";
 
-// Create a client
 const queryClient = new QueryClient();
 
 function App() {
@@ -30,6 +30,7 @@ function App() {
                 <Route path="/post-classified" element={<PostClassified />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/dashboard" element={<Overview />} />
               </Routes>
             </main>
             <Footer />
