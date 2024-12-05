@@ -3,7 +3,7 @@ import { Footer } from "@/components/Footer";
 import { PropertyCard } from "@/components/PropertyCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Home, ShoppingBag, FileText, TrendingUp } from "lucide-react";
+import { Home, ShoppingBag, FileText, TrendingUp, Search } from "lucide-react";
 
 const Index = () => {
   const featuredProperties = [
@@ -38,23 +38,52 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-secondary">
-        <div className="max-w-7xl mx-auto text-center">
+      <section className="relative pt-32 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+        
+        {/* Content */}
+        <div className="relative max-w-7xl mx-auto text-center">
           <Badge className="mb-4 animate-float">Welcome to Bayele</Badge>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
             Your All-in-One Marketplace in Cameroon
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto text-balance">
             Find your perfect home, discover great products, and post classified ads all in one place.
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button size="lg" className="gap-2">
-              <Home className="h-5 w-5" />
-              Find a House
+          
+          {/* Search Bar */}
+          <div className="max-w-2xl mx-auto mb-8">
+            <div className="relative flex items-center">
+              <Search className="absolute left-4 h-5 w-5 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Search for properties, products, or services..."
+                className="w-full h-12 pl-12 pr-4 rounded-l-lg border border-r-0 focus:outline-none focus:ring-2 focus:ring-accent"
+              />
+              <Button size="lg" className="rounded-l-none">
+                Search
+              </Button>
+            </div>
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            <Button size="lg" variant="outline" className="flex flex-col items-center p-6 h-auto">
+              <Home className="h-6 w-6 mb-2" />
+              <span>Find a House</span>
             </Button>
-            <Button size="lg" variant="outline" className="gap-2">
-              <ShoppingBag className="h-5 w-5" />
-              Explore Marketplace
+            <Button size="lg" variant="outline" className="flex flex-col items-center p-6 h-auto">
+              <ShoppingBag className="h-6 w-6 mb-2" />
+              <span>List & Sell</span>
+            </Button>
+            <Button size="lg" variant="outline" className="flex flex-col items-center p-6 h-auto">
+              <TrendingUp className="h-6 w-6 mb-2" />
+              <span>Promote & Earn</span>
+            </Button>
+            <Button size="lg" variant="outline" className="flex flex-col items-center p-6 h-auto">
+              <FileText className="h-6 w-6 mb-2" />
+              <span>Post an Ad</span>
             </Button>
           </div>
         </div>
