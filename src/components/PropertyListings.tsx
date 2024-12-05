@@ -109,10 +109,11 @@ export function PropertyListings({
           imageUrl={property.image_urls?.[0] || "/placeholder.svg"}
           type={property.property_type}
           features={[
-            `${property.bedrooms} Bedrooms`,
-            `${property.bathrooms} Bathrooms`,
             ...(property.features as string[] || []),
           ]}
+          bedrooms={property.bedrooms}
+          bathrooms={property.bathrooms}
+          contact_info={property.contact_info}
         />
       ))}
     </div>
