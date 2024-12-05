@@ -12,6 +12,8 @@ import SignUp from "@/pages/SignUp";
 import Login from "@/pages/Login";
 import Overview from "@/pages/dashboard/Overview";
 import Products from "@/pages/dashboard/Products";
+import Orders from "@/pages/dashboard/Orders";
+import Settings from "@/pages/dashboard/Settings";
 import ProductDetail from "@/pages/ProductDetail";
 
 const queryClient = new QueryClient();
@@ -34,6 +36,8 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/dashboard" element={<Overview />} />
                 <Route path="/dashboard/products" element={<Products />} />
+                <Route path="/dashboard/orders" element={<Orders />} />
+                <Route path="/dashboard/settings" element={<Settings />} />
                 <Route path="/products/:id" element={<ProductDetail />} />
               </Routes>
             </main>
