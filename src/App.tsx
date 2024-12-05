@@ -19,17 +19,21 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Router>
         <AuthProvider>
-          <Navigation />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/find-house" element={<FindHouse />} />
-            <Route path="/list-property" element={<ListProperty />} />
-            <Route path="/classifieds" element={<Classifieds />} />
-            <Route path="/post-classified" element={<PostClassified />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/login" element={<Login />} />
-          </Routes>
-          <Footer />
+          <div className="min-h-screen flex flex-col">
+            <Navigation />
+            <main className="flex-1">
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/find-house" element={<FindHouse />} />
+                <Route path="/list-property" element={<ListProperty />} />
+                <Route path="/classifieds" element={<Classifieds />} />
+                <Route path="/post-classified" element={<PostClassified />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/login" element={<Login />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
         </AuthProvider>
       </Router>
     </QueryClientProvider>
