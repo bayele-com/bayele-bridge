@@ -1,12 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
 import type { Database } from "@/integrations/supabase/types";
 
 type Neighborhood = Database["public"]["Tables"]["neighborhoods"]["Row"];
@@ -18,6 +27,8 @@ interface NeighborhoodFilterProps {
 }
 
 export function NeighborhoodFilter({ city, neighborhoodId, setNeighborhoodId }: NeighborhoodFilterProps) {
+  const [open, setOpen] = useState(false);
+
   const { data: neighborhoods, isLoading } = useQuery({
     queryKey: ["neighborhoods", city],
     queryFn: async () => {
@@ -38,22 +49,74 @@ export function NeighborhoodFilter({ city, neighborhoodId, setNeighborhoodId }: 
     enabled: !!city,
   });
 
+  const selectedNeighborhood = neighborhoods?.find(n => n.id === neighborhoodId);
+
   return (
     <div className="space-y-2">
       <label className="text-sm font-medium">Neighborhood</label>
-      <Select value={neighborhoodId} onValueChange={setNeighborhoodId}>
-        <SelectTrigger>
-          <SelectValue placeholder="Select neighborhood" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Neighborhoods</SelectItem>
-          {neighborhoods?.map((neighborhood) => (
-            <SelectItem key={neighborhood.id} value={neighborhood.id}>
-              {neighborhood.name} {neighborhood.districts?.name ? `(${neighborhood.districts.name})` : ''}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="w-full justify-between"
+          >
+            {neighborhoodId === "all" 
+              ? "All Neighborhoods"
+              : selectedNeighborhood 
+                ? `${selectedNeighborhood.name}${selectedNeighborhood.districts?.name ? ` (${selectedNeighborhood.districts.name})` : ''}`
+                : "Select neighborhood..."}
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-full p-0">
+          <Command>
+            <CommandInput placeholder="Search neighborhood..." />
+            <CommandEmpty>No neighborhood found.</CommandEmpty>
+            <CommandGroup>
+              <CommandItem
+                value="all"
+                onSelect={() => {
+                  setNeighborhoodId("all");
+                  setOpen(false);
+                }}
+              >
+                <Check
+                  className={cn(
+                    "mr-2 h-4 w-4",
+                    neighborhoodId === "all" ? "opacity-100" : "opacity-0"
+                  )}
+                />
+                All Neighborhoods
+              </CommandItem>
+              {neighborhoods?.map((neighborhood) => (
+                <CommandItem
+                  key={neighborhood.id}
+                  value={neighborhood.name.toLowerCase()}
+                  onSelect={() => {
+                    setNeighborhoodId(neighborhood.id);
+                    setOpen(false);
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      neighborhoodId === neighborhood.id ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                  {neighborhood.name}
+                  {neighborhood.districts?.name && (
+                    <span className="ml-2 text-muted-foreground">
+                      ({neighborhood.districts.name})
+                    </span>
+                  )}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }
