@@ -34,7 +34,6 @@ export default function ProductDetail() {
   });
 
   const handleAddToCart = () => {
-    // Will implement cart functionality in the next step
     toast({
       title: "Coming Soon",
       description: "Shopping cart functionality will be available soon!",
@@ -42,7 +41,6 @@ export default function ProductDetail() {
   };
 
   const handleGenerateAffiliateLink = async () => {
-    // Will implement affiliate link generation in a later step
     toast({
       title: "Coming Soon",
       description: "Affiliate link generation will be available soon!",
