@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -14,10 +14,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu, Globe } from "lucide-react";
+import { Menu, Globe, User } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const menuItems = [
     { label: "Find a House", href: "/find-house" },
@@ -63,12 +66,32 @@ export function Navigation() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button variant="ghost" asChild>
-            <Link to="/login">Log In</Link>
-          </Button>
-          <Button asChild>
-            <Link to="/signup">Sign Up</Link>
-          </Button>
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <User className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => navigate("/profile")}>
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => signOut()}>
+                  Log Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <>
+              <Button variant="ghost" asChild>
+                <Link to="/login">Log In</Link>
+              </Button>
+              <Button asChild>
+                <Link to="/signup">Sign Up</Link>
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Trigger */}
@@ -96,20 +119,44 @@ export function Navigation() {
                   </Link>
                 ))}
                 <hr className="my-2" />
-                <Link
-                  to="/login"
-                  className="text-sm font-medium transition-colors hover:text-primary"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Log In
-                </Link>
-                <Link
-                  to="/signup"
-                  className="text-sm font-medium transition-colors hover:text-primary"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Sign Up
-                </Link>
+                {user ? (
+                  <>
+                    <Link
+                      to="/profile"
+                      className="text-sm font-medium transition-colors hover:text-primary"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Profile
+                    </Link>
+                    <Button
+                      variant="ghost"
+                      className="justify-start p-0"
+                      onClick={() => {
+                        signOut();
+                        setIsOpen(false);
+                      }}
+                    >
+                      Log Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      className="text-sm font-medium transition-colors hover:text-primary"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Log In
+                    </Link>
+                    <Link
+                      to="/signup"
+                      className="text-sm font-medium transition-colors hover:text-primary"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Sign Up
+                    </Link>
+                  </>
+                )}
                 <hr className="my-2" />
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">Language</span>
