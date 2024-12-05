@@ -34,7 +34,11 @@ export function Navigation() {
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2">
-          <span className="text-xl font-bold">Bayele</span>
+          <img 
+            src="/lovable-uploads/5c0ab54b-fe1d-4ebf-8656-43bbb97f8252.png" 
+            alt="Bayele" 
+            className="h-8 w-auto"
+          />
         </Link>
 
         {/* Desktop Navigation */}
@@ -74,6 +78,9 @@ export function Navigation() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => navigate("/dashboard")}>
+                  Dashboard
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate("/profile")}>
                   Profile
                 </DropdownMenuItem>
@@ -121,6 +128,13 @@ export function Navigation() {
                 <hr className="my-2" />
                 {user ? (
                   <>
+                    <Link
+                      to="/dashboard"
+                      className="text-sm font-medium transition-colors hover:text-primary"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
                     <Link
                       to="/profile"
                       className="text-sm font-medium transition-colors hover:text-primary"
