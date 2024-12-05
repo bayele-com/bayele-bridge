@@ -129,7 +129,7 @@ export default function ProductDetail() {
               Add to Cart
             </Button>
 
-            {user?.user_type === "affiliate" && (
+            {user?.user_metadata?.user_type === "affiliate" && (
               <Button
                 variant="outline"
                 className="w-full"
