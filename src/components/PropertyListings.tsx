@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PropertyCard } from "@/components/PropertyCard";
+import { VirtualList } from "@/components/ui/virtual-list";
 import type { Database } from "@/integrations/supabase/types";
 
 type RentalProperty = Database["public"]["Tables"]["rental_properties"]["Row"] & {
@@ -94,26 +95,34 @@ export function PropertyListings({
     );
   }
 
+  const renderProperty = (property: RentalProperty) => (
+    <PropertyCard
+      key={property.id}
+      title={property.title}
+      location={`${property.neighborhoods?.name}${
+        property.neighborhoods?.districts?.name
+          ? `, ${property.neighborhoods.districts.name}`
+          : ""
+      }, ${property.city}`}
+      price={`${property.price.toLocaleString()} FCFA/month`}
+      imageUrl={property.image_urls?.[0] || "/placeholder.svg"}
+      type={property.property_type}
+      features={property.features as string[] || []}
+      bedrooms={property.bedrooms}
+      bathrooms={property.bathrooms}
+      contact_info={property.contact_info as { phone?: string; whatsapp?: string }}
+    />
+  );
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {properties.map((property) => (
-        <PropertyCard
-          key={property.id}
-          title={property.title}
-          location={`${property.neighborhoods?.name}${
-            property.neighborhoods?.districts?.name
-              ? `, ${property.neighborhoods.districts.name}`
-              : ""
-          }, ${property.city}`}
-          price={`${property.price.toLocaleString()} FCFA/month`}
-          imageUrl={property.image_urls?.[0] || "/placeholder.svg"}
-          type={property.property_type}
-          features={property.features as string[] || []}
-          bedrooms={property.bedrooms}
-          bathrooms={property.bathrooms}
-          contact_info={property.contact_info as { phone?: string; whatsapp?: string }}
-        />
-      ))}
+    <div className="w-full">
+      <VirtualList
+        items={properties}
+        height={800} // Adjust based on your needs
+        itemHeight={450} // Adjust based on your PropertyCard height
+        renderItem={renderProperty}
+        className="w-full"
+      />
     </div>
   );
 }
