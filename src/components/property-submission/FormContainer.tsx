@@ -1,4 +1,5 @@
 import { UseFormReturn } from "react-hook-form";
+import { Button } from "@/components/ui/button";
 import { PropertyFormValues } from "./types";
 import { PersonalInfoFields } from "./PersonalInfoFields";
 import { PropertyDetailsFields } from "./PropertyDetailsFields";
