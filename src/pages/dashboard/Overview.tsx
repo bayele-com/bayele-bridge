@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useAuth } from "@/contexts/AuthContext";
+import type { User } from "@/types/supabase";
 
 const data = [
   { name: "Jan", value: 400 },
@@ -21,7 +22,7 @@ const data = [
 
 export default function Overview() {
   const { user } = useAuth();
-  const isAffiliate = user?.user_type === "affiliate";
+  const isAffiliate = (user as User)?.user_type === "affiliate";
 
   return (
     <DashboardLayout>

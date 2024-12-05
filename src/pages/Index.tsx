@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Home, ShoppingBag, FileText, TrendingUp, Search } from "lucide-react";
+import { PropertyCard } from "@/components/PropertyCard";
 
 const Index = () => {
   const featuredProperties = [

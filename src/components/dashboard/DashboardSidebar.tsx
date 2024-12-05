@@ -10,6 +10,7 @@ import {
   Home,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import type { User } from "@/types/supabase";
 
 const affiliateLinks = [
   { href: "/dashboard", label: "Overview", icon: Home },
@@ -30,7 +31,7 @@ const businessLinks = [
 
 export function DashboardSidebar() {
   const { user } = useAuth();
-  const links = user?.user_type === "affiliate" ? affiliateLinks : businessLinks;
+  const links = (user as User)?.user_type === "affiliate" ? affiliateLinks : businessLinks;
 
   return (
     <div className="w-64 bg-card border-r min-h-screen p-4">
