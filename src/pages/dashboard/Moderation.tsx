@@ -13,6 +13,16 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { Loader2, CheckCircle, XCircle } from "lucide-react";
 
+interface PendingAd {
+  id: string;
+  title: string;
+  category: string;
+  ad_type: string;
+  submitter_name: string;
+  created_at: string;
+  status: string;
+}
+
 export default function Moderation() {
   const { data: pendingItems = [], isLoading, refetch } = useQuery({
     queryKey: ["pending-moderation"],
@@ -24,7 +34,7 @@ export default function Moderation() {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      return data;
+      return data as PendingAd[];
     },
   });
 
@@ -32,7 +42,7 @@ export default function Moderation() {
     try {
       const { error } = await supabase
         .from("admin_pending_ads")
-        .update({ status: action })
+        .update({ status: action } as { status: string })
         .in("id", ids);
 
       if (error) throw error;
@@ -116,7 +126,7 @@ export default function Moderation() {
                   <TableCell>{item.ad_type}</TableCell>
                   <TableCell>{item.submitter_name}</TableCell>
                   <TableCell>
-                    {new Date(item.created_at!).toLocaleDateString()}
+                    {new Date(item.created_at).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
