@@ -9,7 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { ShoppingCart, Share2 } from "lucide-react";
 
 export default function ProductDetail() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -42,6 +42,7 @@ export default function ProductDetail() {
       return data;
     },
     enabled: !!id,
+    retry: 1, // Only retry once if there's an error
   });
 
   if (isLoading) {
