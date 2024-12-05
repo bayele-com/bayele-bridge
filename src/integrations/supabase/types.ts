@@ -623,6 +623,7 @@ export type Database = {
           features: Json | null
           id: string
           image_urls: string[] | null
+          management_type: string | null
           neighborhood_id: string
           price: number
           property_type: string
@@ -642,6 +643,7 @@ export type Database = {
           features?: Json | null
           id?: string
           image_urls?: string[] | null
+          management_type?: string | null
           neighborhood_id: string
           price: number
           property_type: string
@@ -661,6 +663,7 @@ export type Database = {
           features?: Json | null
           id?: string
           image_urls?: string[] | null
+          management_type?: string | null
           neighborhood_id?: string
           price?: number
           property_type?: string
