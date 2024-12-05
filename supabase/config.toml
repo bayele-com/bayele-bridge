@@ -1,1 +1,10 @@
 project_id = "ltlqjnvddmrulbtuxlui"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage"]
+
+[functions]
+[functions.form-handler]
+verify_jwt = false
