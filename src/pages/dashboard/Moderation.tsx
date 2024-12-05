@@ -18,7 +18,8 @@ interface PendingAd {
 }
 
 type AdminPendingAdUpdate = {
-  status: 'approved' | 'rejected';
+  status: string;
+  rejection_reason?: string;
 };
 
 export default function Moderation() {
@@ -45,11 +46,13 @@ export default function Moderation() {
 
   const handleAction = async (id: string, action: 'approve' | 'reject') => {
     try {
+      const updateData: AdminPendingAdUpdate = {
+        status: action === 'approve' ? 'approved' : 'rejected'
+      };
+
       const { error } = await supabase
-        .from('admin_pending_ads')
-        .update({ 
-          status: action === 'approve' ? 'approved' : 'rejected' 
-        } as AdminPendingAdUpdate)
+        .from('classified_ads')
+        .update(updateData)
         .eq('id', id);
 
       if (error) throw error;
@@ -61,6 +64,7 @@ export default function Moderation() {
 
       refetch();
     } catch (error) {
+      console.error('Error updating ad:', error);
       toast({
         variant: "destructive",
         title: "Error",
