@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import Index from "@/pages/Index";
 import FindHouse from "@/pages/FindHouse";
 import ListProperty from "@/pages/ListProperty";
+import Classifieds from "@/pages/Classifieds";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<Index />} />
           <Route path="/find-house" element={<FindHouse />} />
           <Route path="/list-property" element={<ListProperty />} />
+          <Route path="/classifieds" element={<Classifieds />} />
         </Routes>
         <Footer />
       </Router>
