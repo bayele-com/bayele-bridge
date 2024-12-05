@@ -44,11 +44,6 @@ export function PropertySubmissionForm() {
   const managementType = form.watch("managementType");
   const basePrice = form.watch("price") || 0;
 
-  const fees = {
-    self: 3500,
-    bayele: 2500 + (basePrice * 0.3),
-  };
-
   async function onSubmit(data: PropertyFormValues) {
     try {
       setIsSubmitting(true);
@@ -122,7 +117,7 @@ export function PropertySubmissionForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <PersonalInfoFields form={form} />
         <PropertyDetailsFields form={form} />
-        <ManagementOptionsFields form={form} fees={fees} />
+        <ManagementOptionsFields form={form} />
         <ContactInfoFields form={form} />
         <ImageUploadFields 
           form={form} 
