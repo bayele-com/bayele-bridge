@@ -13,21 +13,32 @@ export default function ProductDetail() {
   const { toast } = useToast();
   const { user } = useAuth();
 
+  console.log("Product ID from URL:", id); // Debug log
+
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", id],
     queryFn: async () => {
       if (!id) throw new Error("No product ID provided");
       
+      console.log("Fetching product with ID:", id); // Debug log
+      
       const { data, error } = await supabase
         .from("products")
         .select(`
           *,
-          business:profiles!products_business_id_fkey (full_name)
+          business:profiles!products_business_id_fkey (
+            full_name
+          )
         `)
         .eq("id", id)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching product:", error); // Debug log
+        throw error;
+      }
+
+      console.log("Fetched product data:", data); // Debug log
       return data;
     },
     enabled: !!id,
