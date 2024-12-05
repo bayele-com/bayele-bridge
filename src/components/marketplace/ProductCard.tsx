@@ -2,12 +2,18 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, ExternalLink } from "lucide-react";
+import { ShoppingCart, ExternalLink, Star } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface ProductCardProps {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   price: number;
   imageUrl?: string;
   businessName?: string;
@@ -23,29 +29,47 @@ export function ProductCard({
   businessName,
   category,
 }: ProductCardProps) {
+  const { toast } = useToast();
+
+  const handleAddToCart = () => {
+    toast({
+      title: "Added to cart",
+      description: `${name} has been added to your cart.`,
+    });
+  };
+
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg">
-      <Link to={`/marketplace/${id}`} className="block">
-        <div className="aspect-square relative overflow-hidden group">
+      <Dialog>
+        <DialogTrigger asChild>
+          <div className="aspect-square relative overflow-hidden cursor-pointer group">
+            <img
+              src={imageUrl || "/placeholder.svg"}
+              alt={name}
+              className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+            />
+            <Badge className="absolute top-4 left-4 bg-background/80 backdrop-blur-sm">
+              {category}
+            </Badge>
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <ExternalLink className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </DialogTrigger>
+        <DialogContent className="max-w-3xl">
           <img
             src={imageUrl || "/placeholder.svg"}
             alt={name}
-            className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+            className="w-full h-auto rounded-lg"
           />
-          <Badge className="absolute top-4 left-4 bg-background/80 backdrop-blur-sm">
-            {category}
-          </Badge>
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-            <ExternalLink className="w-6 h-6 text-white" />
-          </div>
-        </div>
-      </Link>
+        </DialogContent>
+      </Dialog>
 
       <CardContent className="p-6">
         <div className="space-y-4">
           <div>
-            <Link to={`/marketplace/${id}`}>
-              <h3 className="text-lg font-semibold line-clamp-2 hover:text-accent">
+            <Link to={`/products/${id}`}>
+              <h3 className="text-lg font-semibold line-clamp-2 hover:text-primary transition-colors">
                 {name}
               </h3>
             </Link>
@@ -60,12 +84,18 @@ export function ProductCard({
             {description}
           </p>
 
-          <p className="text-xl font-bold">{price.toLocaleString()} FCFA</p>
+          <div className="flex items-center justify-between">
+            <p className="text-xl font-bold">{price.toLocaleString()} FCFA</p>
+            <div className="flex items-center text-yellow-500">
+              <Star className="w-4 h-4 fill-current" />
+              <span className="ml-1 text-sm">4.5</span>
+            </div>
+          </div>
         </div>
       </CardContent>
 
       <CardFooter className="p-6 pt-0">
-        <Button className="w-full">
+        <Button className="w-full" onClick={handleAddToCart}>
           <ShoppingCart className="w-4 h-4 mr-2" />
           Add to Cart
         </Button>

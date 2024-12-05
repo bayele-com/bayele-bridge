@@ -1,17 +1,44 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Search, Filter } from "lucide-react";
+import { Search, Filter, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ProductCard } from "@/components/marketplace/ProductCard";
 import { ProductFilters } from "@/components/marketplace/ProductFilters";
 import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 export default function Marketplace() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
 
+  // Query for featured products
+  const { data: featuredProducts = [], isLoading: isFeaturedLoading } = useQuery({
+    queryKey: ["featured-products"],
+    queryFn: async () => {
+      console.log("Fetching featured products");
+      const { data, error } = await supabase
+        .from("products")
+        .select(`
+          *,
+          business:profiles(full_name)
+        `)
+        .eq("status", "active")
+        .limit(12)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching featured products:", error);
+        throw error;
+      }
+
+      return data;
+    },
+  });
+
+  // Query for all products with filters
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products", searchQuery, selectedCategory],
     queryFn: async () => {
@@ -82,6 +109,47 @@ export default function Marketplace() {
         </div>
       </section>
 
+      {/* Featured Products */}
+      <section className="py-12 bg-background">
+        <div className="container px-4 mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-semibold flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-yellow-500" />
+              Featured Products
+            </h2>
+          </div>
+
+          {isFeaturedLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[1, 2, 3, 4].map((n) => (
+                <Skeleton key={n} className="h-[300px] rounded-lg" />
+              ))}
+            </div>
+          ) : (
+            <Carousel className="w-full">
+              <CarouselContent>
+                {featuredProducts.map((product) => (
+                  <CarouselItem key={product.id} className="md:basis-1/2 lg:basis-1/4">
+                    <ProductCard
+                      id={product.id}
+                      name={product.name}
+                      description={product.description}
+                      price={product.price}
+                      imageUrl={product.image_urls?.[0]}
+                      businessName={product.business?.full_name}
+                      category={product.category}
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          )}
+        </div>
+      </section>
+
+      {/* All Products */}
       <div className="container px-4 mx-auto py-8">
         <div className="flex gap-6">
           {/* Filters */}
@@ -99,9 +167,9 @@ export default function Marketplace() {
             {isLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[1, 2, 3, 4, 5, 6].map((n) => (
-                  <div
+                  <Skeleton
                     key={n}
-                    className="h-[300px] bg-muted animate-pulse rounded-lg"
+                    className="h-[300px] rounded-lg"
                   />
                 ))}
               </div>
