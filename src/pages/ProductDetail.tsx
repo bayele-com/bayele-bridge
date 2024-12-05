@@ -24,7 +24,7 @@ export default function ProductDetail() {
           *,
           business:profiles(full_name)
         `)
-        .eq("id", id)
+        .eq('id', id)
         .single();
 
       if (error) throw error;
