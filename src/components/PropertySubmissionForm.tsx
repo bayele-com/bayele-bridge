@@ -2,17 +2,11 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { PropertyFormValues, propertyFormSchema } from "./property-submission/types";
-import { PersonalInfoFields } from "./property-submission/PersonalInfoFields";
-import { PropertyDetailsFields } from "./property-submission/PropertyDetailsFields";
-import { ManagementOptionsFields } from "./property-submission/ManagementOptionsFields";
-import { ContactInfoFields } from "./property-submission/ContactInfoFields";
-import { ImageUploadFields } from "./property-submission/ImageUploadFields";
-import { ACCEPTED_IMAGE_TYPES } from "./property-submission/types";
+import { FormContainer } from "./property-submission/FormContainer";
 
 export function PropertySubmissionForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,9 +34,6 @@ export function PropertySubmissionForm() {
       images: [],
     },
   });
-
-  const managementType = form.watch("managementType");
-  const basePrice = form.watch("price") || 0;
 
   async function onSubmit(data: PropertyFormValues) {
     try {
@@ -114,21 +105,12 @@ export function PropertySubmissionForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <PersonalInfoFields form={form} />
-        <PropertyDetailsFields form={form} />
-        <ManagementOptionsFields form={form} />
-        <ContactInfoFields form={form} />
-        <ImageUploadFields 
-          form={form} 
-          uploadProgress={uploadProgress}
-          ACCEPTED_IMAGE_TYPES={ACCEPTED_IMAGE_TYPES}
-        />
-
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Submitting..." : "Submit Property"}
-        </Button>
-      </form>
+      <FormContainer
+        form={form}
+        isSubmitting={isSubmitting}
+        uploadProgress={uploadProgress}
+        onSubmit={onSubmit}
+      />
     </Form>
   );
 }

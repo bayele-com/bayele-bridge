@@ -9,12 +9,19 @@ interface ManagementOptionsFieldsProps {
 
 export function ManagementOptionsFields({ form }: ManagementOptionsFieldsProps) {
   const managementType = form.watch("managementType");
+  const propertyType = form.watch("propertyType");
   const basePrice = form.watch("price") || 0;
 
-  const fees = {
-    self: 4500,
-    bayele: basePrice * 0.15,
+  const getFees = () => {
+    if (managementType === 'self') {
+      return 4500; // Fixed fee for self-management
+    } else {
+      // 15% fee only applies to furnished apartments
+      return propertyType === 'furnished-apartment' ? basePrice * 0.15 : 0;
+    }
   };
+
+  const fees = getFees();
 
   return (
     <div className="space-y-4">
@@ -46,7 +53,9 @@ export function ManagementOptionsFields({ form }: ManagementOptionsFieldsProps) 
                   <label htmlFor="bayele" className="flex-1">
                     <div className="font-medium">Bayele Manages</div>
                     <div className="text-sm text-muted-foreground">
-                      15% fee for every paid booking
+                      {propertyType === 'furnished-apartment' 
+                        ? "15% fee for every paid booking" 
+                        : "No additional fee"}
                     </div>
                   </label>
                 </div>
@@ -54,9 +63,13 @@ export function ManagementOptionsFields({ form }: ManagementOptionsFieldsProps) 
             </FormControl>
             <FormDescription>
               {managementType === "self" ? (
-                <>Fixed fee: {fees.self.toLocaleString()} FCFA per month</>
+                <>Fixed fee: {fees.toLocaleString()} FCFA per month</>
               ) : (
-                <>Fee per booking: {fees.bayele.toLocaleString()} FCFA ({(15).toLocaleString()}% of rent)</>
+                propertyType === 'furnished-apartment' ? (
+                  <>Fee per booking: {fees.toLocaleString()} FCFA ({(15).toLocaleString()}% of rent)</>
+                ) : (
+                  <>No additional fee</>
+                )
               )}
             </FormDescription>
             <FormMessage />
