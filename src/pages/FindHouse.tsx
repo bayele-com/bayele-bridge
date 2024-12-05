@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PropertyCard } from "@/components/PropertyCard";
 import { PropertyFilters } from "@/components/PropertyFilters";
+import { FindHouseHero } from "@/components/FindHouseHero";
 import type { Database } from "@/integrations/supabase/types";
 
 type RentalProperty = Database["public"]["Tables"]["rental_properties"]["Row"];
@@ -55,9 +56,9 @@ export default function FindHouse() {
 
   return (
     <div className="min-h-screen bg-background">
+      <FindHouseHero />
+      
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-8">Find Your Perfect Home</h1>
-        
         <PropertyFilters
           city={city}
           setCity={setCity}
