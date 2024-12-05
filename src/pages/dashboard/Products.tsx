@@ -1,16 +1,23 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { ProductForm } from "@/components/dashboard/products/ProductForm";
 
 export default function Products() {
   const { user } = useAuth();
-  const { toast } = useToast();
+  const [showAddProduct, setShowAddProduct] = useState(false);
 
-  const { data: products = [], isLoading } = useQuery({
+  const { data: products = [], isLoading, refetch } = useQuery({
     queryKey: ["dashboard-products", user?.id],
     queryFn: async () => {
       console.log("Fetching products for user:", user?.id);
@@ -33,6 +40,11 @@ export default function Products() {
     enabled: !!user,
   });
 
+  const handleProductCreated = () => {
+    setShowAddProduct(false);
+    refetch();
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-8">
@@ -43,12 +55,7 @@ export default function Products() {
               Manage your products and track their performance
             </p>
           </div>
-          <Button onClick={() => {
-            toast({
-              title: "Coming Soon",
-              description: "Product creation will be available soon!",
-            });
-          }}>
+          <Button onClick={() => setShowAddProduct(true)}>
             <Plus className="mr-2 h-4 w-4" />
             Add Product
           </Button>
@@ -103,6 +110,18 @@ export default function Products() {
           </div>
         )}
       </div>
+
+      <Dialog open={showAddProduct} onOpenChange={setShowAddProduct}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Add New Product</DialogTitle>
+          </DialogHeader>
+          <ProductForm
+            onSuccess={handleProductCreated}
+            onCancel={() => setShowAddProduct(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 }
