@@ -23,6 +23,10 @@ interface PendingAd {
   status: string;
 }
 
+type AdminPendingAdUpdate = {
+  status: 'approve' | 'reject';
+}
+
 export default function Moderation() {
   const { data: pendingItems = [], isLoading, refetch } = useQuery({
     queryKey: ["pending-moderation"],
@@ -38,11 +42,11 @@ export default function Moderation() {
     },
   });
 
-  const handleBulkAction = async (action: "approve" | "reject", ids: string[]) => {
+  const handleBulkAction = async (action: 'approve' | 'reject', ids: string[]) => {
     try {
       const { error } = await supabase
         .from("admin_pending_ads")
-        .update({ status: action } as { status: string })
+        .update({ status: action } satisfies AdminPendingAdUpdate)
         .in("id", ids);
 
       if (error) throw error;
