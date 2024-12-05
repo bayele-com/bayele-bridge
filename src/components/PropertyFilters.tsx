@@ -68,7 +68,7 @@ export function PropertyFilters({
             <SelectValue placeholder="Select neighborhood" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Neighborhoods</SelectItem>
+            <SelectItem value="all">All Neighborhoods</SelectItem>
             {neighborhoods?.map((neighborhood) => (
               <SelectItem key={neighborhood.id} value={neighborhood.id}>
                 {neighborhood.name}
@@ -85,7 +85,7 @@ export function PropertyFilters({
             <SelectValue placeholder="Select type" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Types</SelectItem>
+            <SelectItem value="all">All Types</SelectItem>
             <SelectItem value="Apartment">Apartment</SelectItem>
             <SelectItem value="House">House</SelectItem>
             <SelectItem value="Studio">Studio</SelectItem>
