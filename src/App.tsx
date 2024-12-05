@@ -7,7 +7,6 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { Loader2 } from "lucide-react";
 
-// Lazy load components
 const Index = lazy(() => import("@/pages/Index"));
 const FindHouse = lazy(() => import("@/pages/FindHouse"));
 const ListProperty = lazy(() => import("@/pages/ListProperty"));
@@ -22,6 +21,7 @@ const Settings = lazy(() => import("@/pages/dashboard/Settings"));
 const ProductDetail = lazy(() => import("@/pages/ProductDetail"));
 const Marketplace = lazy(() => import("@/pages/Marketplace"));
 const Checkout = lazy(() => import("@/pages/Checkout"));
+const Moderation = lazy(() => import("@/pages/dashboard/Moderation"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -36,7 +36,6 @@ const queryClient = new QueryClient({
   },
 });
 
-// Loading fallback component
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-screen">
     <Loader2 className="h-8 w-8 animate-spin" />
@@ -68,6 +67,7 @@ function App() {
                     <Route path="/products/:id" element={<ProductDetail />} />
                     <Route path="/marketplace" element={<Marketplace />} />
                     <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/dashboard/moderation" element={<Moderation />} />
                   </Routes>
                 </Suspense>
               </main>
