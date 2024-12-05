@@ -6,6 +6,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command";
 import {
   Popover,
@@ -49,7 +50,7 @@ export function NeighborhoodFilter({ city, neighborhoodId, setNeighborhoodId }: 
     enabled: !!city,
   });
 
-  const selectedNeighborhood = neighborhoods?.find(n => n.id === neighborhoodId);
+  const selectedNeighborhood = neighborhoods.find(n => n.id === neighborhoodId);
 
   return (
     <div className="space-y-2">
@@ -81,47 +82,49 @@ export function NeighborhoodFilter({ city, neighborhoodId, setNeighborhoodId }: 
         <PopoverContent className="w-full p-0">
           <Command>
             <CommandInput placeholder="Search neighborhood..." />
-            <CommandEmpty>No neighborhood found.</CommandEmpty>
-            <CommandGroup>
-              <CommandItem
-                value="all"
-                onSelect={() => {
-                  setNeighborhoodId("all");
-                  setOpen(false);
-                }}
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    neighborhoodId === "all" ? "opacity-100" : "opacity-0"
-                  )}
-                />
-                All Neighborhoods
-              </CommandItem>
-              {neighborhoods.map((neighborhood) => (
+            <CommandList>
+              <CommandEmpty>No neighborhood found.</CommandEmpty>
+              <CommandGroup>
                 <CommandItem
-                  key={neighborhood.id}
-                  value={neighborhood.name.toLowerCase()}
+                  value="all"
                   onSelect={() => {
-                    setNeighborhoodId(neighborhood.id);
+                    setNeighborhoodId("all");
                     setOpen(false);
                   }}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      neighborhoodId === neighborhood.id ? "opacity-100" : "opacity-0"
+                      neighborhoodId === "all" ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {neighborhood.name}
-                  {neighborhood.districts?.name && (
-                    <span className="ml-2 text-muted-foreground">
-                      ({neighborhood.districts.name})
-                    </span>
-                  )}
+                  All Neighborhoods
                 </CommandItem>
-              ))}
-            </CommandGroup>
+                {neighborhoods.map((neighborhood) => (
+                  <CommandItem
+                    key={neighborhood.id}
+                    value={neighborhood.name.toLowerCase()}
+                    onSelect={() => {
+                      setNeighborhoodId(neighborhood.id);
+                      setOpen(false);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        neighborhoodId === neighborhood.id ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    {neighborhood.name}
+                    {neighborhood.districts?.name && (
+                      <span className="ml-2 text-muted-foreground">
+                        ({neighborhood.districts.name})
+                      </span>
+                    )}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
           </Command>
         </PopoverContent>
       </Popover>
