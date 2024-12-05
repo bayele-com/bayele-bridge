@@ -1,63 +1,129 @@
-import { Link } from "react-router-dom";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import {
-  BarChart,
-  Settings,
-  ShoppingBag,
-  Link as LinkIcon,
-  DollarSign,
-  Home,
-} from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import type { User } from "@/types/supabase";
-
-const affiliateLinks = [
-  { href: "/dashboard", label: "Overview", icon: Home },
-  { href: "/dashboard/links", label: "My Links", icon: LinkIcon },
-  { href: "/dashboard/earnings", label: "Earnings", icon: DollarSign },
-  { href: "/dashboard/products", label: "Products", icon: ShoppingBag },
-  { href: "/dashboard/analytics", label: "Analytics", icon: BarChart },
-  { href: "/dashboard/settings", label: "Settings", icon: Settings },
-];
-
-const businessLinks = [
-  { href: "/dashboard", label: "Overview", icon: Home },
-  { href: "/dashboard/products", label: "Products", icon: ShoppingBag },
-  { href: "/dashboard/orders", label: "Orders", icon: ShoppingBag },
-  { href: "/dashboard/analytics", label: "Analytics", icon: BarChart },
-  { href: "/dashboard/settings", label: "Settings", icon: Settings },
-];
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
+import {
+  BarChart3,
+  Building2,
+  CircleDollarSign,
+  Home,
+  Link2,
+  Package,
+  Settings,
+  ShoppingCart,
+  Users,
+} from "lucide-react";
 
 export function DashboardSidebar() {
   const { user } = useAuth();
-  const links = (user as User)?.user_type === "affiliate" ? affiliateLinks : businessLinks;
+  const userType = user?.user_metadata?.user_type;
+
+  // Define menu items based on user type
+  const getMenuItems = () => {
+    const commonItems = [
+      {
+        title: "Overview",
+        icon: Home,
+        href: "/dashboard",
+      },
+      {
+        title: "Settings",
+        icon: Settings,
+        href: "/dashboard/settings",
+      },
+    ];
+
+    const affiliateItems = [
+      {
+        title: "My Links",
+        icon: Link2,
+        href: "/dashboard/links",
+      },
+      {
+        title: "Earnings",
+        icon: CircleDollarSign,
+        href: "/dashboard/earnings",
+      },
+      {
+        title: "Products",
+        icon: Package,
+        href: "/dashboard/products",
+      },
+    ];
+
+    const businessItems = [
+      {
+        title: "Products",
+        icon: Package,
+        href: "/dashboard/products",
+      },
+      {
+        title: "Orders",
+        icon: ShoppingCart,
+        href: "/dashboard/orders",
+      },
+      {
+        title: "Analytics",
+        icon: BarChart3,
+        href: "/dashboard/analytics",
+      },
+    ];
+
+    const adminItems = [
+      {
+        title: "Users",
+        icon: Users,
+        href: "/dashboard/users",
+      },
+      {
+        title: "Businesses",
+        icon: Building2,
+        href: "/dashboard/businesses",
+      },
+    ];
+
+    switch (userType) {
+      case "affiliate":
+        return [...commonItems, ...affiliateItems];
+      case "business":
+        return [...commonItems, ...businessItems];
+      case "admin":
+        return [...commonItems, ...adminItems];
+      default:
+        return commonItems;
+    }
+  };
+
+  const menuItems = getMenuItems();
 
   return (
-    <div className="w-64 bg-card border-r min-h-screen p-4">
-      <div className="space-y-4">
-        <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold">Dashboard</h2>
-          <div className="space-y-1">
-            {links.map((link) => (
-              <Button
-                key={link.href}
-                variant="ghost"
-                className={cn(
-                  "w-full justify-start",
-                  window.location.pathname === link.href && "bg-accent"
-                )}
-                asChild
-              >
-                <Link to={link.href}>
-                  <link.icon className="mr-2 h-4 w-4" />
-                  {link.label}
-                </Link>
-              </Button>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+    <Sidebar>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {menuItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.href} className="flex items-center gap-2">
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
   );
 }
