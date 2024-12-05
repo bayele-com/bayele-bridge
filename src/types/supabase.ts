@@ -1,5 +1,6 @@
 import { User as SupabaseUser } from '@supabase/supabase-js';
+import { Database } from './database';
 
-export interface User extends SupabaseUser {
-  user_type?: 'affiliate' | 'business' | 'user' | 'admin';
+export type User = SupabaseUser & {
+  user_type?: Database['public']['Enums']['user_type'];
 }

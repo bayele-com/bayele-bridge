@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/contexts/AuthContext";
-import { ShoppingCart, Share2, ExternalLink } from "lucide-react";
+import { ShoppingCart, Share2 } from "lucide-react";
 
 export default function ProductDetail() {
   const { id } = useParams();
