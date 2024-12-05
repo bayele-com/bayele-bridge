@@ -3,12 +3,12 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, ExternalLink, Star } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useCart } from "@/contexts/CartContext";
 
 interface ProductCardProps {
   id: string;
@@ -29,12 +29,14 @@ export function ProductCard({
   businessName,
   category,
 }: ProductCardProps) {
-  const { toast } = useToast();
+  const { addItem } = useCart();
 
   const handleAddToCart = () => {
-    toast({
-      title: "Added to cart",
-      description: `${name} has been added to your cart.`,
+    addItem({
+      id,
+      name,
+      price,
+      imageUrl,
     });
   };
 
