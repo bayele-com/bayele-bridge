@@ -9,6 +9,7 @@ import ListProperty from "@/pages/ListProperty";
 import Classifieds from "@/pages/Classifieds";
 import PostClassified from "@/pages/PostClassified";
 import SignUp from "@/pages/SignUp";
+import Login from "@/pages/Login";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ function App() {
             <Route path="/classifieds" element={<Classifieds />} />
             <Route path="/post-classified" element={<PostClassified />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
           <Footer />
         </AuthProvider>
