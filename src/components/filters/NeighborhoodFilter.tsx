@@ -18,17 +18,24 @@ interface NeighborhoodFilterProps {
 }
 
 export function NeighborhoodFilter({ city, neighborhoodId, setNeighborhoodId }: NeighborhoodFilterProps) {
-  const { data: neighborhoods } = useQuery({
+  const { data: neighborhoods, isLoading } = useQuery({
     queryKey: ["neighborhoods", city],
     queryFn: async () => {
+      console.log("Fetching neighborhoods for city:", city);
       const { data, error } = await supabase
         .from("neighborhoods")
-        .select("*")
-        .eq("city", city);
+        .select("*, districts(name)")
+        .eq("city", city)
+        .order('name');
       
-      if (error) throw error;
-      return data as Neighborhood[];
+      if (error) {
+        console.error("Error fetching neighborhoods:", error);
+        throw error;
+      }
+      console.log("Fetched neighborhoods:", data);
+      return data as (Neighborhood & { districts: { name: string } | null })[];
     },
+    enabled: !!city,
   });
 
   return (
@@ -42,7 +49,7 @@ export function NeighborhoodFilter({ city, neighborhoodId, setNeighborhoodId }: 
           <SelectItem value="all">All Neighborhoods</SelectItem>
           {neighborhoods?.map((neighborhood) => (
             <SelectItem key={neighborhood.id} value={neighborhood.id}>
-              {neighborhood.name}
+              {neighborhood.name} {neighborhood.districts?.name ? `(${neighborhood.districts.name})` : ''}
             </SelectItem>
           ))}
         </SelectContent>

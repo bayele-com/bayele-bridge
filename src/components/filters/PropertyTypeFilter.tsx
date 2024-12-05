@@ -22,6 +22,7 @@ export function PropertyTypeFilter({ propertyType, setPropertyType }: PropertyTy
         <SelectContent>
           <SelectItem value="all">All Types</SelectItem>
           <SelectItem value="Apartment">Apartment</SelectItem>
+          <SelectItem value="Furnished apartment">Furnished apartment</SelectItem>
           <SelectItem value="House">House</SelectItem>
           <SelectItem value="Studio">Studio</SelectItem>
           <SelectItem value="Room">Room</SelectItem>
