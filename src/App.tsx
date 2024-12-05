@@ -4,6 +4,7 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import Index from "@/pages/Index";
 import FindHouse from "@/pages/FindHouse";
+import ListProperty from "@/pages/ListProperty";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/find-house" element={<FindHouse />} />
+          <Route path="/list-property" element={<ListProperty />} />
         </Routes>
         <Footer />
       </Router>

@@ -45,8 +45,6 @@ const Index = () => {
     }
   ];
 
-  // ... keep existing code (Hero Section and other sections)
-
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
