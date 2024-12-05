@@ -108,12 +108,10 @@ export function PropertyListings({
           price={`${property.price.toLocaleString()} FCFA/month`}
           imageUrl={property.image_urls?.[0] || "/placeholder.svg"}
           type={property.property_type}
-          features={[
-            ...(property.features as string[] || []),
-          ]}
+          features={property.features as string[] || []}
           bedrooms={property.bedrooms}
           bathrooms={property.bathrooms}
-          contact_info={property.contact_info}
+          contact_info={property.contact_info as { phone?: string; whatsapp?: string }}
         />
       ))}
     </div>

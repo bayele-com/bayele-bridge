@@ -13,7 +13,11 @@ const Index = () => {
       price: "350,000 FCFA/month",
       imageUrl: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80",
       type: "Apartment",
-      features: ["2 Bedrooms", "1 Kitchen", "Parking"]
+      features: ["2 Bedrooms", "1 Kitchen", "Parking"],
+      contact_info: {
+        phone: "+237600000000",
+        whatsapp: "237600000000"
+      }
     },
     {
       title: "Cozy Studio in Douala",
@@ -21,7 +25,11 @@ const Index = () => {
       price: "200,000 FCFA/month",
       imageUrl: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80",
       type: "Studio",
-      features: ["1 Bedroom", "1 Kitchen"]
+      features: ["1 Bedroom", "1 Kitchen"],
+      contact_info: {
+        phone: "+237600000000",
+        whatsapp: "237600000000"
+      }
     },
     {
       title: "Luxury Villa with Pool",
@@ -29,9 +37,15 @@ const Index = () => {
       price: "800,000 FCFA/month",
       imageUrl: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80",
       type: "Villa",
-      features: ["4 Bedrooms", "2 Kitchens", "Pool", "Parking"]
+      features: ["4 Bedrooms", "2 Kitchens", "Pool", "Parking"],
+      contact_info: {
+        phone: "+237600000000",
+        whatsapp: "237600000000"
+      }
     }
   ];
+
+  // ... keep existing code (Hero Section and other sections)
 
   return (
     <div className="min-h-screen flex flex-col">
