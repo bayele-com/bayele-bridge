@@ -16,6 +16,8 @@ export default function ProductDetail() {
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", id],
     queryFn: async () => {
+      if (!id) throw new Error("No product ID provided");
+      
       const { data, error } = await supabase
         .from("products")
         .select(`
@@ -28,6 +30,7 @@ export default function ProductDetail() {
       if (error) throw error;
       return data;
     },
+    enabled: !!id, // Only run query if we have an ID
   });
 
   const handleAddToCart = () => {
