@@ -9,9 +9,9 @@ type RentalProperty = Database["public"]["Tables"]["rental_properties"]["Row"];
 
 export default function FindHouse() {
   const [city, setCity] = useState<"Yaounde" | "Douala">("Yaounde");
-  const [neighborhoodId, setNeighborhoodId] = useState<string>("");
+  const [neighborhoodId, setNeighborhoodId] = useState<string>("all");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000000]);
-  const [propertyType, setPropertyType] = useState<string>("");
+  const [propertyType, setPropertyType] = useState<string>("all");
 
   const { data: properties, isLoading } = useQuery({
     queryKey: ["properties", city, neighborhoodId, priceRange, propertyType],
@@ -31,11 +31,11 @@ export default function FindHouse() {
         .gte("price", priceRange[0])
         .lte("price", priceRange[1]);
 
-      if (neighborhoodId) {
+      if (neighborhoodId !== "all") {
         query = query.eq("neighborhood_id", neighborhoodId);
       }
 
-      if (propertyType) {
+      if (propertyType !== "all") {
         query = query.eq("property_type", propertyType);
       }
 
