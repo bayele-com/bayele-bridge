@@ -2,14 +2,51 @@ import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessa
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { UseFormReturn } from "react-hook-form";
+import { UseFormReturn, useWatch } from "react-hook-form";
 import { PropertyFormValues } from "./types";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 interface PropertyDetailsFieldsProps {
   form: UseFormReturn<PropertyFormValues>;
 }
 
 export function PropertyDetailsFields({ form }: PropertyDetailsFieldsProps) {
+  const city = useWatch({
+    control: form.control,
+    name: "city",
+  });
+
+  const { data: neighborhoods = [] } = useQuery({
+    queryKey: ["neighborhoods", city],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("neighborhoods")
+        .select("*, districts(name)")
+        .eq("city", city)
+        .order('name');
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!city,
+  });
+
+  const propertyType = form.watch("propertyType");
+  const managementType = form.watch("managementType");
+
+  const getFees = () => {
+    if (managementType === 'self') {
+      return '4,500 FCFA monthly fee';
+    } else {
+      if (propertyType === 'furnished-apartment') {
+        return 'Daily rate calculation';
+      } else {
+        return '2,500 FCFA monthly listing fee + 30% of one month rent (paid by tenant)';
+      }
+    }
+  };
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">Property Details</h2>
@@ -48,14 +85,62 @@ export function PropertyDetailsFields({ form }: PropertyDetailsFieldsProps) {
         )}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <FormField
+          control={form.control}
+          name="city"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>City</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select city" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="Yaounde">Yaoundé</SelectItem>
+                  <SelectItem value="Douala">Douala</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="neighborhoodId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Neighborhood</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select neighborhood" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {neighborhoods.map((neighborhood) => (
+                    <SelectItem key={neighborhood.id} value={neighborhood.id}>
+                      {neighborhood.name}
+                      {neighborhood.districts?.name && ` (${neighborhood.districts.name})`}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="propertyType"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Property Type</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select type" />
@@ -74,6 +159,34 @@ export function PropertyDetailsFields({ form }: PropertyDetailsFieldsProps) {
           )}
         />
 
+        <FormField
+          control={form.control}
+          name="price"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                {propertyType === 'furnished-apartment' ? 'Daily Rate (FCFA)' : 'Monthly Rent (FCFA)'}
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  min="10000"
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                />
+              </FormControl>
+              <FormDescription>
+                {propertyType === 'furnished-apartment' 
+                  ? 'Enter the daily rate for the furnished apartment'
+                  : 'Enter the monthly rent amount'}
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormField
           control={form.control}
           name="bedrooms"
@@ -115,18 +228,24 @@ export function PropertyDetailsFields({ form }: PropertyDetailsFieldsProps) {
 
       <FormField
         control={form.control}
-        name="price"
+        name="managementType"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Monthly Rent (FCFA)</FormLabel>
-            <FormControl>
-              <Input
-                type="number"
-                min="10000"
-                {...field}
-                onChange={(e) => field.onChange(Number(e.target.value))}
-              />
-            </FormControl>
+            <FormLabel>Management Options</FormLabel>
+            <Select onValueChange={field.onChange} value={field.value}>
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select management option" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectItem value="self">Self Manage</SelectItem>
+                <SelectItem value="bayele">Bayele Manages</SelectItem>
+              </SelectContent>
+            </Select>
+            <FormDescription>
+              {getFees()}
+            </FormDescription>
             <FormMessage />
           </FormItem>
         )}

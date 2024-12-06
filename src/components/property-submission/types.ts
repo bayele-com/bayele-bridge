@@ -10,7 +10,7 @@ export const propertyFormSchema = z.object({
   description: z.string().min(50, "Description must be at least 50 characters"),
   propertyType: z.string(),
   city: z.enum(["Yaounde", "Douala"]),
-  neighborhoodId: z.string(),
+  neighborhoodId: z.string().min(1, "Please select a neighborhood"),
   price: z.number().min(10000, "Price must be at least 10,000 FCFA"),
   bedrooms: z.number().min(0),
   bathrooms: z.number().min(0),
