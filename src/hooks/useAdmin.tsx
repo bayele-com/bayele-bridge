@@ -34,7 +34,7 @@ export function useAdmin() {
 
         if (profileError) throw profileError;
 
-        const userType = profileData.user_type as AdminRole;
+        const userType = profileData.user_type;
         const isAdminRole = ['super_admin', 'editor', 'developer'].includes(userType);
 
         if (!isAdminRole) {
@@ -55,7 +55,7 @@ export function useAdmin() {
         if (permissionsError) throw permissionsError;
 
         setIsAdmin(true);
-        setAdminRole(userType);
+        setAdminRole(userType as AdminRole);
         setPermissions(permissionsData.permissions);
       } catch (error) {
         console.error('Error checking admin status:', error);

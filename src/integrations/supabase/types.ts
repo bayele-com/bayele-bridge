@@ -86,6 +86,41 @@ export type Database = {
           },
         ]
       }
+      admin_permissions: {
+        Row: {
+          created_at: string
+          id: string
+          permissions: Json
+          role: Database["public"]["Enums"]["user_type"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          permissions?: Json
+          role: Database["public"]["Enums"]["user_type"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          permissions?: Json
+          role?: Database["public"]["Enums"]["user_type"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_permissions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       affiliate_earnings: {
         Row: {
           affiliate_id: string | null
@@ -747,7 +782,14 @@ export type Database = {
     }
     Enums: {
       city_name: "Yaounde" | "Douala"
-      user_type: "affiliate" | "business" | "user" | "admin"
+      user_type:
+        | "affiliate"
+        | "business"
+        | "user"
+        | "admin"
+        | "super_admin"
+        | "editor"
+        | "developer"
     }
     CompositeTypes: {
       delivery_address_type: {
