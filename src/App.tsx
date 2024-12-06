@@ -22,12 +22,13 @@ const ProductDetail = lazy(() => import("@/pages/ProductDetail"));
 const Marketplace = lazy(() => import("@/pages/Marketplace"));
 const Checkout = lazy(() => import("@/pages/Checkout"));
 const Moderation = lazy(() => import("@/pages/dashboard/Moderation"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 60 * 1000, // 1 minute
-      gcTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 60 * 1000,
+      gcTime: 5 * 60 * 1000,
       retry: 1,
       refetchOnWindowFocus: false,
       refetchOnMount: true,
@@ -68,6 +69,8 @@ function App() {
                     <Route path="/marketplace" element={<Marketplace />} />
                     <Route path="/checkout" element={<Checkout />} />
                     <Route path="/dashboard/moderation" element={<Moderation />} />
+                    <Route path="/404" element={<NotFound />} />
+                    <Route path="*" element={<Navigate to="/404" replace />} />
                   </Routes>
                 </Suspense>
               </main>
