@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { AdminPermissions, AdminRole } from '@/types/auth';
+import { AdminRole, AdminPermissions } from '@/types/database/admin';
 import { useToast } from '@/components/ui/use-toast';
 
 export function useAdmin() {
@@ -11,7 +11,7 @@ export function useAdmin() {
   const { toast } = useToast();
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminRole, setAdminRole] = useState<AdminRole | null>(null);
-  const [permissions, setPermissions] = useState<AdminPermissions['permissions'] | null>(null);
+  const [permissions, setPermissions] = useState<AdminPermissions | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export function useAdmin() {
     checkAdminStatus();
   }, [user, toast]);
 
-  const checkPermission = (permission: keyof AdminPermissions['permissions']): boolean => {
+  const checkPermission = (permission: keyof AdminPermissions): boolean => {
     if (!isAdmin || !permissions) return false;
     if (adminRole === 'super_admin') return true;
     return !!permissions[permission];

@@ -2,12 +2,12 @@ import { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Loader2 } from 'lucide-react';
-import { AdminRole } from '@/types/auth';
+import { AdminRole, AdminPermissions } from '@/types/database/admin';
 
 interface AdminRouteProps {
   children: React.ReactNode;
   requiredRole?: AdminRole;
-  requiredPermission?: string;
+  requiredPermission?: keyof AdminPermissions;
 }
 
 export function AdminRoute({ 
