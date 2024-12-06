@@ -112,21 +112,49 @@ const Index = () => {
 
           {/* CTA Buttons */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            <Button size="lg" variant="outline" className="flex flex-col items-center p-6 h-auto">
-              <Home className="h-6 w-6 mb-2" />
-              <span>Find a House</span>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="flex flex-col items-center p-6 h-auto"
+              asChild
+            >
+              <Link to="/find-house">
+                <Home className="h-6 w-6 mb-2" />
+                <span>Find a House</span>
+              </Link>
             </Button>
-            <Button size="lg" variant="outline" className="flex flex-col items-center p-6 h-auto">
-              <ShoppingBag className="h-6 w-6 mb-2" />
-              <span>List & Sell</span>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="flex flex-col items-center p-6 h-auto"
+              asChild
+            >
+              <Link to="/list-property">
+                <ShoppingBag className="h-6 w-6 mb-2" />
+                <span>List & Sell</span>
+              </Link>
             </Button>
-            <Button size="lg" variant="outline" className="flex flex-col items-center p-6 h-auto">
-              <TrendingUp className="h-6 w-6 mb-2" />
-              <span>Promote & Earn</span>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="flex flex-col items-center p-6 h-auto"
+              asChild
+            >
+              <Link to="/marketplace">
+                <TrendingUp className="h-6 w-6 mb-2" />
+                <span>Promote & Earn</span>
+              </Link>
             </Button>
-            <Button size="lg" variant="outline" className="flex flex-col items-center p-6 h-auto">
-              <FileText className="h-6 w-6 mb-2" />
-              <span>Post an Ad</span>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="flex flex-col items-center p-6 h-auto"
+              asChild
+            >
+              <Link to="/post-classified">
+                <FileText className="h-6 w-6 mb-2" />
+                <span>Post an Ad</span>
+              </Link>
             </Button>
           </div>
         </div>

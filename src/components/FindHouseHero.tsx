@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
 export function FindHouseHero() {
+  const navigate = useNavigate();
+
   return (
     <div className="relative bg-background py-20 px-4 sm:px-6 lg:px-8">
       {/* Background pattern */}
@@ -19,12 +22,12 @@ export function FindHouseHero() {
         </p>
         
         <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button size="lg" className="w-full sm:w-auto">
+          <Button size="lg" className="w-full sm:w-auto" onClick={() => navigate("/find-house")}>
             <Search className="mr-2 h-5 w-5" />
             Start Your Search
           </Button>
-          <Button variant="outline" size="lg" className="w-full sm:w-auto">
-            List Your Property
+          <Button variant="outline" size="lg" className="w-full sm:w-auto" asChild>
+            <Link to="/list-property">List Your Property</Link>
           </Button>
         </div>
         
