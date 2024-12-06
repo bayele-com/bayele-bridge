@@ -12,7 +12,8 @@ export function useSignUp() {
     try {
       setIsLoading(true);
       
-      const { error: signUpError } = await supabase.auth.signUp({
+      // First, sign up the user
+      const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
@@ -26,13 +27,26 @@ export function useSignUp() {
 
       if (signUpError) throw signUpError;
 
-      toast({
-        title: "Account created successfully!",
-        description: "Please check your email to verify your account.",
-      });
-      
-      navigate("/");
-    } catch (error) {
+      // Check if the signup was successful and we have a session
+      if (authData && authData.session) {
+        toast({
+          title: "Account created successfully!",
+          description: "You are now logged in.",
+        });
+        
+        // Navigate to home page since we have a valid session
+        navigate("/");
+      } else {
+        // If email confirmation is required
+        toast({
+          title: "Account created successfully!",
+          description: "Please check your email to verify your account.",
+        });
+        
+        // Navigate to login page since email verification is required
+        navigate("/login");
+      }
+    } catch (error: any) {
       console.error("Signup error:", error);
       toast({
         variant: "destructive",
