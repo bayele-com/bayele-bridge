@@ -56,7 +56,8 @@ export function useAdmin() {
 
         setIsAdmin(true);
         setAdminRole(userType as AdminRole);
-        setPermissions(permissionsData.permissions);
+        // Cast the permissions data to AdminPermissions type
+        setPermissions(permissionsData.permissions as AdminPermissions);
       } catch (error) {
         console.error('Error checking admin status:', error);
         toast({
