@@ -5,6 +5,7 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
+import { AdminRoute } from "@/components/auth/AdminRoute";
 import { Loader2 } from "lucide-react";
 
 const Index = lazy(() => import("@/pages/Index"));
@@ -54,6 +55,7 @@ function App() {
               <main className="flex-1">
                 <Suspense fallback={<LoadingFallback />}>
                   <Routes>
+                    {/* Public routes */}
                     <Route path="/" element={<Index />} />
                     <Route path="/find-house" element={<FindHouse />} />
                     <Route path="/list-property" element={<ListProperty />} />
@@ -61,14 +63,53 @@ function App() {
                     <Route path="/post-classified" element={<PostClassified />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/login" element={<Login />} />
-                    <Route path="/dashboard" element={<Overview />} />
-                    <Route path="/dashboard/products" element={<Products />} />
-                    <Route path="/dashboard/orders" element={<Orders />} />
-                    <Route path="/dashboard/settings" element={<Settings />} />
                     <Route path="/products/:id" element={<ProductDetail />} />
                     <Route path="/marketplace" element={<Marketplace />} />
                     <Route path="/checkout" element={<Checkout />} />
-                    <Route path="/dashboard/moderation" element={<Moderation />} />
+
+                    {/* Protected admin routes */}
+                    <Route
+                      path="/dashboard"
+                      element={
+                        <AdminRoute>
+                          <Overview />
+                        </AdminRoute>
+                      }
+                    />
+                    <Route
+                      path="/dashboard/products"
+                      element={
+                        <AdminRoute requiredPermission="canManageContent">
+                          <Products />
+                        </AdminRoute>
+                      }
+                    />
+                    <Route
+                      path="/dashboard/orders"
+                      element={
+                        <AdminRoute requiredPermission="canManageContent">
+                          <Orders />
+                        </AdminRoute>
+                      }
+                    />
+                    <Route
+                      path="/dashboard/settings"
+                      element={
+                        <AdminRoute requiredPermission="canManageSettings">
+                          <Settings />
+                        </AdminRoute>
+                      }
+                    />
+                    <Route
+                      path="/dashboard/moderation"
+                      element={
+                        <AdminRoute requiredPermission="canModerateContent">
+                          <Moderation />
+                        </AdminRoute>
+                      }
+                    />
+
+                    {/* Error routes */}
                     <Route path="/404" element={<NotFound />} />
                     <Route path="*" element={<Navigate to="/404" replace />} />
                   </Routes>
