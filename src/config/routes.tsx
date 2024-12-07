@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { Navigate } from "react-router-dom"; // Add this import
+import { Navigate } from "react-router-dom";
 import { AdminRoute } from "@/components/auth/AdminRoute";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 
@@ -11,6 +11,7 @@ const Classifieds = lazy(() => import("@/pages/Classifieds"));
 const PostClassified = lazy(() => import("@/pages/PostClassified"));
 const SignUp = lazy(() => import("@/pages/SignUp"));
 const Login = lazy(() => import("@/pages/Login"));
+const HowItWorks = lazy(() => import("@/pages/HowItWorks"));
 const Overview = lazy(() => import("@/pages/dashboard/Overview"));
 const Products = lazy(() => import("@/pages/dashboard/Products"));
 const Orders = lazy(() => import("@/pages/dashboard/Orders"));
@@ -34,6 +35,7 @@ export const publicRoutes = [
   { path: "/post-classified", element: <PostClassified /> },
   { path: "/signup", element: <SignUp /> },
   { path: "/login", element: <Login /> },
+  { path: "/how-it-works", element: <HowItWorks /> },
   { path: "/products/:id", element: <ProductDetail /> },
   { path: "/marketplace", element: <Marketplace /> },
   { path: "/checkout", element: <Checkout /> },

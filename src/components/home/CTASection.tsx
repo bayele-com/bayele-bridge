@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export function CTASection() {
   return (
@@ -12,8 +13,12 @@ export function CTASection() {
             Create your account today and start exploring Cameroon's premier marketplace platform.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Button size="lg">Sign Up Now</Button>
-            <Button size="lg" variant="outline">Learn More</Button>
+            <Button size="lg" asChild>
+              <Link to="/signup">Sign Up Now</Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <Link to="/how-it-works">Learn More</Link>
+            </Button>
           </div>
         </div>
       </div>
