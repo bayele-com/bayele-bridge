@@ -10,7 +10,7 @@ export function HeroSection() {
       
       {/* Content */}
       <div className="relative max-w-7xl mx-auto text-center">
-        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto text-balance">
+        <p className="text-xl font-bold text-[#0EA5E9] mb-8 max-w-2xl mx-auto text-balance">
           Find your perfect home, discover great products, and post classified ads all in one place.
         </p>
         
@@ -21,11 +21,11 @@ export function HeroSection() {
             <input
               type="text"
               placeholder="Search for properties, products, or services..."
-              className="w-full h-12 pl-12 pr-4 rounded-l-lg border border-r-0 focus:outline-none focus:ring-2 focus:ring-[#2962FF]"
+              className="w-full h-12 pl-12 pr-4 rounded-l-lg border border-r-0 focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]"
             />
             <Button 
               size="lg" 
-              className="rounded-l-none bg-[#2962FF] hover:bg-[#2962FF]/90"
+              className="rounded-l-none bg-[#0EA5E9] hover:bg-[#0EA5E9]/90"
             >
               Search
             </Button>
@@ -37,7 +37,7 @@ export function HeroSection() {
           <Button 
             size="lg" 
             variant="outline" 
-            className="flex flex-col items-center p-6 h-auto hover:bg-[#2962FF]/10 hover:text-[#2962FF] border-[#2962FF]/20"
+            className="flex flex-col items-center p-6 h-auto bg-[#FFA500]/10 hover:bg-[#FFA500]/20 border-[#FFA500]/20 text-black"
             asChild
           >
             <Link to="/find-house">
@@ -48,7 +48,7 @@ export function HeroSection() {
           <Button 
             size="lg" 
             variant="outline" 
-            className="flex flex-col items-center p-6 h-auto hover:bg-[#FFA500]/10 hover:text-[#FFA500] border-[#FFA500]/20"
+            className="flex flex-col items-center p-6 h-auto bg-[#FFA500]/10 hover:bg-[#FFA500]/20 border-[#FFA500]/20 text-black"
             asChild
           >
             <Link to="/list-property">
@@ -59,7 +59,7 @@ export function HeroSection() {
           <Button 
             size="lg" 
             variant="outline" 
-            className="flex flex-col items-center p-6 h-auto hover:bg-[#2962FF]/10 hover:text-[#2962FF] border-[#2962FF]/20"
+            className="flex flex-col items-center p-6 h-auto bg-[#FFA500]/10 hover:bg-[#FFA500]/20 border-[#FFA500]/20 text-black"
             asChild
           >
             <Link to="/marketplace">
@@ -70,7 +70,7 @@ export function HeroSection() {
           <Button 
             size="lg" 
             variant="outline" 
-            className="flex flex-col items-center p-6 h-auto hover:bg-[#FFA500]/10 hover:text-[#FFA500] border-[#FFA500]/20"
+            className="flex flex-col items-center p-6 h-auto bg-[#FFA500]/10 hover:bg-[#FFA500]/20 border-[#FFA500]/20 text-black"
             asChild
           >
             <Link to="/post-classified">
