@@ -8,30 +8,30 @@ import { CartProvider } from "@/contexts/CartContext";
 import { AdminRoute } from "@/components/auth/AdminRoute";
 import { Loader2 } from "lucide-react";
 
-// Optimize lazy loading with prefetch
-const Index = lazy(() => import("@/pages/Index"), { suspense: true });
-const FindHouse = lazy(() => import("@/pages/FindHouse"), { suspense: true });
-const ListProperty = lazy(() => import("@/pages/ListProperty"), { suspense: true });
-const Classifieds = lazy(() => import("@/pages/Classifieds"), { suspense: true });
-const PostClassified = lazy(() => import("@/pages/PostClassified"), { suspense: true });
-const SignUp = lazy(() => import("@/pages/SignUp"), { suspense: true });
-const Login = lazy(() => import("@/pages/Login"), { suspense: true });
-const Overview = lazy(() => import("@/pages/dashboard/Overview"), { suspense: true });
-const Products = lazy(() => import("@/pages/dashboard/Products"), { suspense: true });
-const Orders = lazy(() => import("@/pages/dashboard/Orders"), { suspense: true });
-const Settings = lazy(() => import("@/pages/dashboard/Settings"), { suspense: true });
-const ProductDetail = lazy(() => import("@/pages/ProductDetail"), { suspense: true });
-const Marketplace = lazy(() => import("@/pages/Marketplace"), { suspense: true });
-const Checkout = lazy(() => import("@/pages/Checkout"), { suspense: true });
-const Moderation = lazy(() => import("@/pages/dashboard/Moderation"), { suspense: true });
-const NotFound = lazy(() => import("@/pages/NotFound"), { suspense: true });
+// Lazy load components
+const Index = lazy(() => import("@/pages/Index"));
+const FindHouse = lazy(() => import("@/pages/FindHouse"));
+const ListProperty = lazy(() => import("@/pages/ListProperty"));
+const Classifieds = lazy(() => import("@/pages/Classifieds"));
+const PostClassified = lazy(() => import("@/pages/PostClassified"));
+const SignUp = lazy(() => import("@/pages/SignUp"));
+const Login = lazy(() => import("@/pages/Login"));
+const Overview = lazy(() => import("@/pages/dashboard/Overview"));
+const Products = lazy(() => import("@/pages/dashboard/Products"));
+const Orders = lazy(() => import("@/pages/dashboard/Orders"));
+const Settings = lazy(() => import("@/pages/dashboard/Settings"));
+const ProductDetail = lazy(() => import("@/pages/ProductDetail"));
+const Marketplace = lazy(() => import("@/pages/Marketplace"));
+const Checkout = lazy(() => import("@/pages/Checkout"));
+const Moderation = lazy(() => import("@/pages/dashboard/Moderation"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
 
 // Optimize React Query configuration
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
       retry: 2,
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
       networkMode: 'always',
