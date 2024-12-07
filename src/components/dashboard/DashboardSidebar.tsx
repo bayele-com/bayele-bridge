@@ -84,6 +84,11 @@ export function DashboardSidebar() {
         icon: BarChart3,
         href: "/dashboard/analytics",
       },
+      {
+        title: "Affiliates",
+        icon: Link2,
+        href: "/dashboard/affiliates",
+      },
     ];
 
     const businessItems = [
