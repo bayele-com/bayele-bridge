@@ -88,7 +88,7 @@ export function ClassifiedCard({
         )}
         {contact.whatsapp && (
           <Button
-            className="flex-1"
+            className="flex-1 bg-[#0EA5E9] hover:bg-[#0EA5E9]/90"
             onClick={() => window.open(
               `https://wa.me/${contact.whatsapp}?text=Hi, I'm interested in your ad: ${title}`,
               '_blank'
