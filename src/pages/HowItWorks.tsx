@@ -7,7 +7,9 @@ import {
   Search, 
   MessageSquare, 
   ShieldCheck, 
-  DollarSign 
+  DollarSign,
+  ShoppingBag,
+  FileText
 } from "lucide-react";
 
 export default function HowItWorks() {
