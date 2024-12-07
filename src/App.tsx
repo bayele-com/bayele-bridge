@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { AdminRoute } from "@/components/auth/AdminRoute";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Loader2 } from "lucide-react";
 
 // Lazy load components
@@ -75,12 +76,14 @@ function App() {
                     <Route path="/marketplace" element={<Marketplace />} />
                     <Route path="/checkout" element={<Checkout />} />
 
-                    {/* Protected admin routes */}
+                    {/* Protected admin routes - Wrapped with DashboardLayout */}
                     <Route
                       path="/dashboard"
                       element={
                         <AdminRoute>
-                          <Overview />
+                          <DashboardLayout>
+                            <Overview />
+                          </DashboardLayout>
                         </AdminRoute>
                       }
                     />
@@ -88,7 +91,9 @@ function App() {
                       path="/dashboard/users"
                       element={
                         <AdminRoute requiredPermission="canManageUsers">
-                          <Users />
+                          <DashboardLayout>
+                            <Users />
+                          </DashboardLayout>
                         </AdminRoute>
                       }
                     />
@@ -96,7 +101,9 @@ function App() {
                       path="/dashboard/properties"
                       element={
                         <AdminRoute requiredPermission="canManageContent">
-                          <Properties />
+                          <DashboardLayout>
+                            <Properties />
+                          </DashboardLayout>
                         </AdminRoute>
                       }
                     />
@@ -104,7 +111,9 @@ function App() {
                       path="/dashboard/businesses"
                       element={
                         <AdminRoute requiredPermission="canManageContent">
-                          <Businesses />
+                          <DashboardLayout>
+                            <Businesses />
+                          </DashboardLayout>
                         </AdminRoute>
                       }
                     />
@@ -112,7 +121,9 @@ function App() {
                       path="/dashboard/affiliates"
                       element={
                         <AdminRoute requiredPermission="canManageUsers">
-                          <Affiliates />
+                          <DashboardLayout>
+                            <Affiliates />
+                          </DashboardLayout>
                         </AdminRoute>
                       }
                     />
@@ -120,7 +131,9 @@ function App() {
                       path="/dashboard/products"
                       element={
                         <AdminRoute requiredPermission="canManageContent">
-                          <Products />
+                          <DashboardLayout>
+                            <Products />
+                          </DashboardLayout>
                         </AdminRoute>
                       }
                     />
@@ -128,7 +141,9 @@ function App() {
                       path="/dashboard/orders"
                       element={
                         <AdminRoute requiredPermission="canManageContent">
-                          <Orders />
+                          <DashboardLayout>
+                            <Orders />
+                          </DashboardLayout>
                         </AdminRoute>
                       }
                     />
@@ -136,7 +151,9 @@ function App() {
                       path="/dashboard/settings"
                       element={
                         <AdminRoute requiredPermission="canManageSettings">
-                          <Settings />
+                          <DashboardLayout>
+                            <Settings />
+                          </DashboardLayout>
                         </AdminRoute>
                       }
                     />
@@ -144,7 +161,9 @@ function App() {
                       path="/dashboard/moderation"
                       element={
                         <AdminRoute requiredPermission="canModerateContent">
-                          <Moderation />
+                          <DashboardLayout>
+                            <Moderation />
+                          </DashboardLayout>
                         </AdminRoute>
                       }
                     />
@@ -152,7 +171,9 @@ function App() {
                       path="/dashboard/analytics"
                       element={
                         <AdminRoute requiredPermission="canViewAnalytics">
-                          <Analytics />
+                          <DashboardLayout>
+                            <Analytics />
+                          </DashboardLayout>
                         </AdminRoute>
                       }
                     />
