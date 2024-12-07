@@ -1,61 +1,39 @@
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
-import { Loader2, CheckCircle, XCircle } from "lucide-react";
-import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
-import { Database } from "@/integrations/supabase/types";
-
-type ClassifiedAd = Database["public"]["Tables"]["classified_ads"]["Row"];
-type RentalProperty = Database["public"]["Tables"]["rental_properties"]["Row"];
+import { supabase } from "@/integrations/supabase/client";
+import { ClassifiedAdsModeration } from "@/components/dashboard/moderation/ClassifiedAdsModeration";
+import { PropertiesModeration } from "@/components/dashboard/moderation/PropertiesModeration";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Moderation() {
-  const { data: pendingAds, isLoading: isLoadingAds, refetch: refetchAds } = useQuery({
-    queryKey: ["pending-ads"],
+  const { data: pendingAdsCount } = useQuery({
+    queryKey: ["pending-ads-count"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { count, error } = await supabase
         .from('classified_ads')
-        .select('*')
-        .eq('status', 'pending')
-        .order('created_at', { ascending: false });
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'pending');
 
-      if (error) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Failed to fetch pending ads",
-        });
-        throw error;
-      }
-
-      return data as ClassifiedAd[];
+      if (error) throw error;
+      return count || 0;
     },
   });
 
-  const { data: pendingProperties, isLoading: isLoadingProperties, refetch: refetchProperties } = useQuery({
-    queryKey: ["pending-properties"],
+  const { data: pendingPropertiesCount } = useQuery({
+    queryKey: ["pending-properties-count"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { count, error } = await supabase
         .from('rental_properties')
-        .select('*')
-        .eq('status', 'pending')
-        .order('created_at', { ascending: false });
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'pending');
 
-      if (error) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Failed to fetch pending properties",
-        });
-        throw error;
-      }
-
-      return data as RentalProperty[];
+      if (error) throw error;
+      return count || 0;
     },
   });
 
-  const handleAdAction = async (id: string, action: 'approve' | 'reject', type: 'ad' | 'property') => {
+  const handleAction = async (id: string, action: 'approve' | 'reject', type: 'ad' | 'property') => {
     try {
       const table = type === 'ad' ? 'classified_ads' : 'rental_properties';
       const updateData = {
@@ -75,12 +53,6 @@ export default function Moderation() {
         title: "Success",
         description: `${type === 'ad' ? 'Advertisement' : 'Property'} ${action}ed successfully`,
       });
-
-      if (type === 'ad') {
-        refetchAds();
-      } else {
-        refetchProperties();
-      }
     } catch (error) {
       console.error('Error updating item:', error);
       toast({
@@ -91,16 +63,6 @@ export default function Moderation() {
     }
   };
 
-  if (isLoadingAds || isLoadingProperties) {
-    return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center min-h-[400px]">
-          <Loader2 className="h-8 w-8 animate-spin" />
-        </div>
-      </DashboardLayout>
-    );
-  }
-
   return (
     <DashboardLayout>
       <div className="container mx-auto px-4 py-8">
@@ -109,112 +71,19 @@ export default function Moderation() {
         <Tabs defaultValue="ads" className="w-full">
           <TabsList>
             <TabsTrigger value="ads">
-              Classified Ads ({pendingAds?.length || 0})
+              Classified Ads ({pendingAdsCount || 0})
             </TabsTrigger>
             <TabsTrigger value="properties">
-              Properties ({pendingProperties?.length || 0})
+              Properties ({pendingPropertiesCount || 0})
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="ads">
-            {pendingAds && pendingAds.length > 0 ? (
-              <div className="grid gap-4">
-                {pendingAds.map((ad) => (
-                  <div key={ad.id} className="bg-card p-4 rounded-lg shadow">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-semibold">{ad.title}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          Category: {ad.category} | Type: {ad.ad_type}
-                        </p>
-                        {ad.price && (
-                          <p className="text-sm">Price: {ad.price.toLocaleString()} FCFA</p>
-                        )}
-                        {ad.location && (
-                          <p className="text-sm">Location: {ad.location}</p>
-                        )}
-                        <p className="text-sm mt-2">
-                          Contact: {
-                            typeof ad.contact_info === 'object' && ad.contact_info !== null
-                              ? `${(ad.contact_info as any).name || 'N/A'} (${(ad.contact_info as any).email || 'N/A'})`
-                              : 'N/A'
-                          }
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="default"
-                          className="bg-green-500 hover:bg-green-600"
-                          onClick={() => handleAdAction(ad.id, 'approve', 'ad')}
-                        >
-                          <CheckCircle className="h-4 w-4 mr-1" />
-                          Approve
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => handleAdAction(ad.id, 'reject', 'ad')}
-                        >
-                          <XCircle className="h-4 w-4 mr-1" />
-                          Reject
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-center text-muted-foreground py-8">No pending ads to review.</p>
-            )}
+            <ClassifiedAdsModeration onAction={handleAction} />
           </TabsContent>
 
           <TabsContent value="properties">
-            {pendingProperties && pendingProperties.length > 0 ? (
-              <div className="grid gap-4">
-                {pendingProperties.map((property) => (
-                  <div key={property.id} className="bg-card p-4 rounded-lg shadow">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-semibold">{property.title}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          Type: {property.property_type} | City: {property.city}
-                        </p>
-                        <p className="text-sm">Price: {property.price.toLocaleString()} FCFA</p>
-                        <p className="text-sm mt-2">
-                          Contact: {
-                            typeof property.contact_info === 'object' && property.contact_info !== null
-                              ? `${(property.contact_info as any).name || 'N/A'} (${(property.contact_info as any).email || 'N/A'})`
-                              : 'N/A'
-                          }
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="default"
-                          className="bg-green-500 hover:bg-green-600"
-                          onClick={() => handleAdAction(property.id, 'approve', 'property')}
-                        >
-                          <CheckCircle className="h-4 w-4 mr-1" />
-                          Approve
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => handleAdAction(property.id, 'reject', 'property')}
-                        >
-                          <XCircle className="h-4 w-4 mr-1" />
-                          Reject
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-center text-muted-foreground py-8">No pending properties to review.</p>
-            )}
+            <PropertiesModeration onAction={handleAction} />
           </TabsContent>
         </Tabs>
       </div>

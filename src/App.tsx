@@ -28,6 +28,7 @@ const Users = lazy(() => import("@/pages/dashboard/Users"));
 const Properties = lazy(() => import("@/pages/dashboard/Properties"));
 const Businesses = lazy(() => import("@/pages/dashboard/Businesses"));
 const Analytics = lazy(() => import("@/pages/dashboard/Analytics"));
+const Affiliates = lazy(() => import("@/pages/dashboard/Affiliates"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 
 const queryClient = new QueryClient({
@@ -104,6 +105,14 @@ function App() {
                       element={
                         <AdminRoute requiredPermission="canManageContent">
                           <Businesses />
+                        </AdminRoute>
+                      }
+                    />
+                    <Route
+                      path="/dashboard/affiliates"
+                      element={
+                        <AdminRoute requiredPermission="canManageUsers">
+                          <Affiliates />
                         </AdminRoute>
                       }
                     />
