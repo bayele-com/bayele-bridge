@@ -24,14 +24,17 @@ const ProductDetail = lazy(() => import("@/pages/ProductDetail"));
 const Marketplace = lazy(() => import("@/pages/Marketplace"));
 const Checkout = lazy(() => import("@/pages/Checkout"));
 const Moderation = lazy(() => import("@/pages/dashboard/Moderation"));
+const Users = lazy(() => import("@/pages/dashboard/Users"));
+const Properties = lazy(() => import("@/pages/dashboard/Properties"));
+const Businesses = lazy(() => import("@/pages/dashboard/Businesses"));
+const Analytics = lazy(() => import("@/pages/dashboard/Analytics"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 
-// Optimize React Query configuration
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
       retry: 2,
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
       networkMode: 'always',
@@ -42,7 +45,6 @@ const queryClient = new QueryClient({
   },
 });
 
-// Optimize loading state
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-[200px]">
     <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -82,6 +84,30 @@ function App() {
                       }
                     />
                     <Route
+                      path="/dashboard/users"
+                      element={
+                        <AdminRoute requiredPermission="canManageUsers">
+                          <Users />
+                        </AdminRoute>
+                      }
+                    />
+                    <Route
+                      path="/dashboard/properties"
+                      element={
+                        <AdminRoute requiredPermission="canManageContent">
+                          <Properties />
+                        </AdminRoute>
+                      }
+                    />
+                    <Route
+                      path="/dashboard/businesses"
+                      element={
+                        <AdminRoute requiredPermission="canManageContent">
+                          <Businesses />
+                        </AdminRoute>
+                      }
+                    />
+                    <Route
                       path="/dashboard/products"
                       element={
                         <AdminRoute requiredPermission="canManageContent">
@@ -110,6 +136,14 @@ function App() {
                       element={
                         <AdminRoute requiredPermission="canModerateContent">
                           <Moderation />
+                        </AdminRoute>
+                      }
+                    />
+                    <Route
+                      path="/dashboard/analytics"
+                      element={
+                        <AdminRoute requiredPermission="canViewAnalytics">
+                          <Analytics />
                         </AdminRoute>
                       }
                     />

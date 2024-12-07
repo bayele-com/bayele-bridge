@@ -3,8 +3,8 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -19,13 +19,16 @@ import {
   Settings,
   ShoppingCart,
   Users,
+  FileText,
+  Home as HomeIcon,
+  AlertCircle,
+  CheckCircle2,
 } from "lucide-react";
 
 export function DashboardSidebar() {
   const { user } = useAuth();
   const userType = user?.user_metadata?.user_type;
 
-  // Define menu items based on user type
   const getMenuItems = () => {
     const commonItems = [
       {
@@ -40,21 +43,46 @@ export function DashboardSidebar() {
       },
     ];
 
-    const affiliateItems = [
+    const adminItems = [
       {
-        title: "My Links",
-        icon: Link2,
-        href: "/dashboard/links",
+        title: "Users",
+        icon: Users,
+        href: "/dashboard/users",
       },
       {
-        title: "Earnings",
-        icon: CircleDollarSign,
-        href: "/dashboard/earnings",
+        title: "Properties",
+        icon: HomeIcon,
+        href: "/dashboard/properties",
+      },
+      {
+        title: "Classifieds",
+        icon: FileText,
+        href: "/dashboard/classifieds",
+      },
+      {
+        title: "Businesses",
+        icon: Building2,
+        href: "/dashboard/businesses",
       },
       {
         title: "Products",
         icon: Package,
         href: "/dashboard/products",
+      },
+      {
+        title: "Orders",
+        icon: ShoppingCart,
+        href: "/dashboard/orders",
+      },
+      {
+        title: "Moderation",
+        icon: AlertCircle,
+        href: "/dashboard/moderation",
+      },
+      {
+        title: "Analytics",
+        icon: BarChart3,
+        href: "/dashboard/analytics",
       },
     ];
 
@@ -76,26 +104,26 @@ export function DashboardSidebar() {
       },
     ];
 
-    const adminItems = [
+    const affiliateItems = [
       {
-        title: "Users",
-        icon: Users,
-        href: "/dashboard/users",
+        title: "My Links",
+        icon: Link2,
+        href: "/dashboard/links",
       },
       {
-        title: "Businesses",
-        icon: Building2,
-        href: "/dashboard/businesses",
+        title: "Earnings",
+        icon: CircleDollarSign,
+        href: "/dashboard/earnings",
       },
     ];
 
     switch (userType) {
-      case "affiliate":
-        return [...commonItems, ...affiliateItems];
+      case "super_admin":
+        return [...commonItems, ...adminItems];
       case "business":
         return [...commonItems, ...businessItems];
-      case "admin":
-        return [...commonItems, ...adminItems];
+      case "affiliate":
+        return [...commonItems, ...affiliateItems];
       default:
         return commonItems;
     }
