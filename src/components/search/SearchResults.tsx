@@ -86,7 +86,15 @@ export function SearchResults({ query }: SearchResultsProps) {
       <TabsContent value="properties">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {properties.map((property) => (
-            <PropertyCard key={property.id} {...property} />
+            <PropertyCard
+              key={property.id}
+              {...property}
+              location={`${property.address || ''}, ${property.city}`}
+              imageUrl={property.image_urls?.[0] || '/placeholder.svg'}
+              type={property.property_type}
+              features={property.features?.amenities || []}
+              price={`${property.price.toLocaleString()} FCFA`}
+            />
           ))}
         </div>
       </TabsContent>
@@ -94,7 +102,12 @@ export function SearchResults({ query }: SearchResultsProps) {
       <TabsContent value="classifieds">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {classifieds.map((classified) => (
-            <ClassifiedCard key={classified.id} {...classified} />
+            <ClassifiedCard
+              key={classified.id}
+              {...classified}
+              imageUrl={classified.image_urls?.[0] || '/placeholder.svg'}
+              contact={classified.contact_info}
+            />
           ))}
         </div>
       </TabsContent>
