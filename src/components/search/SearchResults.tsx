@@ -10,6 +10,17 @@ interface SearchResultsProps {
   query: string;
 }
 
+// Define type for contact info
+interface ContactInfo {
+  phone?: string;
+  whatsapp?: string;
+}
+
+// Define type for features
+interface Features {
+  amenities?: string[];
+}
+
 export function SearchResults({ query }: SearchResultsProps) {
   const { data: properties = [], isLoading: propertiesLoading } = useQuery({
     queryKey: ["search-properties", query],
@@ -85,30 +96,46 @@ export function SearchResults({ query }: SearchResultsProps) {
 
       <TabsContent value="properties">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {properties.map((property) => (
-            <PropertyCard
-              key={property.id}
-              {...property}
-              location={`${property.address || ''}, ${property.city}`}
-              imageUrl={property.image_urls?.[0] || '/placeholder.svg'}
-              type={property.property_type}
-              features={property.features?.amenities || []}
-              price={`${property.price.toLocaleString()} FCFA`}
-            />
-          ))}
+          {properties.map((property) => {
+            const features = property.features as Features;
+            const contactInfo = property.contact_info as ContactInfo;
+            
+            return (
+              <PropertyCard
+                key={property.id}
+                title={property.title}
+                location={`${property.address || ''}, ${property.city}`}
+                imageUrl={property.image_urls?.[0] || '/placeholder.svg'}
+                type={property.property_type}
+                features={features?.amenities || []}
+                price={`${property.price.toLocaleString()} FCFA`}
+                bedrooms={property.bedrooms}
+                bathrooms={property.bathrooms}
+                contact_info={contactInfo}
+              />
+            );
+          })}
         </div>
       </TabsContent>
 
       <TabsContent value="classifieds">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {classifieds.map((classified) => (
-            <ClassifiedCard
-              key={classified.id}
-              {...classified}
-              imageUrl={classified.image_urls?.[0] || '/placeholder.svg'}
-              contact={classified.contact_info}
-            />
-          ))}
+          {classifieds.map((classified) => {
+            const contactInfo = classified.contact_info as ContactInfo;
+            
+            return (
+              <ClassifiedCard
+                key={classified.id}
+                title={classified.title}
+                description={classified.description}
+                category={classified.category}
+                location={classified.location || ''}
+                price={classified.price}
+                imageUrl={classified.image_urls?.[0] || '/placeholder.svg'}
+                contact={contactInfo}
+              />
+            );
+          })}
         </div>
       </TabsContent>
 
