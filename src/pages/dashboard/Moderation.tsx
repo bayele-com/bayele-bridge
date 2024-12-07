@@ -5,34 +5,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
 import { Loader2, CheckCircle, XCircle } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import { Database } from "@/integrations/supabase/types";
 
-interface PendingAd {
-  id: string;
-  title: string;
-  category: string;
-  ad_type: string;
-  price: number | null;
-  location: string | null;
-  submitter_email: string;
-  submitter_name: string;
-  status: string;
-  created_at: string;
-}
-
-interface PendingProperty {
-  id: string;
-  title: string;
-  property_type: string;
-  price: number;
-  city: string;
-  status: string;
-  created_at: string;
-  contact_info: {
-    name: string;
-    email: string;
-    phone: string;
-  };
-}
+type ClassifiedAd = Database["public"]["Tables"]["classified_ads"]["Row"];
+type RentalProperty = Database["public"]["Tables"]["rental_properties"]["Row"];
 
 export default function Moderation() {
   const { data: pendingAds, isLoading: isLoadingAds, refetch: refetchAds } = useQuery({
@@ -53,7 +29,7 @@ export default function Moderation() {
         throw error;
       }
 
-      return data as PendingAd[];
+      return data as ClassifiedAd[];
     },
   });
 
@@ -75,7 +51,7 @@ export default function Moderation() {
         throw error;
       }
 
-      return data as PendingProperty[];
+      return data as RentalProperty[];
     },
   });
 
@@ -158,7 +134,11 @@ export default function Moderation() {
                           <p className="text-sm">Location: {ad.location}</p>
                         )}
                         <p className="text-sm mt-2">
-                          Submitted by: {ad.submitter_name} ({ad.submitter_email})
+                          Contact: {
+                            typeof ad.contact_info === 'object' && ad.contact_info !== null
+                              ? `${(ad.contact_info as any).name || 'N/A'} (${(ad.contact_info as any).email || 'N/A'})`
+                              : 'N/A'
+                          }
                         </p>
                       </div>
                       <div className="flex gap-2">
@@ -202,7 +182,11 @@ export default function Moderation() {
                         </p>
                         <p className="text-sm">Price: {property.price.toLocaleString()} FCFA</p>
                         <p className="text-sm mt-2">
-                          Contact: {property.contact_info.name} ({property.contact_info.email})
+                          Contact: {
+                            typeof property.contact_info === 'object' && property.contact_info !== null
+                              ? `${(property.contact_info as any).name || 'N/A'} (${(property.contact_info as any).email || 'N/A'})`
+                              : 'N/A'
+                          }
                         </p>
                       </div>
                       <div className="flex gap-2">
