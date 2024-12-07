@@ -1,8 +1,34 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/components/ui/use-toast";
 
 export function HeroSection() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      toast({
+        description: "Please enter a search term",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Navigate to search results with the query
+    navigate(`/find-house?q=${encodeURIComponent(searchQuery)}`);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <section className="relative py-8 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background Pattern */}
@@ -22,10 +48,14 @@ export function HeroSection() {
               type="text"
               placeholder="Search for properties, products, or services..."
               className="w-full h-12 pl-12 pr-4 rounded-l-lg border border-r-0 focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={handleKeyPress}
             />
             <Button 
               size="lg" 
               className="rounded-l-none bg-[#0EA5E9] hover:bg-[#0EA5E9]/90"
+              onClick={handleSearch}
             >
               Search
             </Button>

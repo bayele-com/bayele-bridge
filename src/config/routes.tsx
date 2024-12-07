@@ -26,6 +26,7 @@ const Businesses = lazy(() => import("@/pages/dashboard/Businesses"));
 const Analytics = lazy(() => import("@/pages/dashboard/Analytics"));
 const Affiliates = lazy(() => import("@/pages/dashboard/Affiliates"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
+const Search = lazy(() => import("@/pages/Search"));
 
 export const publicRoutes = [
   { path: "/", element: <Index /> },
@@ -39,6 +40,7 @@ export const publicRoutes = [
   { path: "/products/:id", element: <ProductDetail /> },
   { path: "/marketplace", element: <Marketplace /> },
   { path: "/checkout", element: <Checkout /> },
+  { path: "/search", element: <Search /> },
 ];
 
 export const dashboardRoutes = [
