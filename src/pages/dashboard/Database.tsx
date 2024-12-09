@@ -9,7 +9,7 @@ interface TableStats {
 }
 
 export default function Database() {
-  const { data: dbStats, isLoading } = useQuery({
+  const { data: dbStats, isLoading } = useQuery<TableStats>({
     queryKey: ["database-stats"],
     queryFn: async () => {
       const { data, error } = await supabase
