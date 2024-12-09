@@ -3,16 +3,25 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Shield, UserX, AlertTriangle } from "lucide-react";
 
+interface AuthLog {
+  id: string;
+  type: string;
+  success: boolean;
+  created_at: string;
+}
+
 export default function Security() {
   const { data: securityStats, isLoading } = useQuery({
     queryKey: ["security-stats"],
     queryFn: async () => {
-      const { data: failedLogins } = await supabase
-        .from("auth_log")
-        .select("*")
-        .eq("type", "login")
-        .eq("success", false)
-        .limit(10);
+      const { data: failedLogins, error } = await supabase
+        .from('auth_log')
+        .select('*')
+        .eq('type', 'login')
+        .eq('success', false)
+        .limit(10) as { data: AuthLog[] | null; error: any };
+
+      if (error) throw error;
 
       return {
         failedLogins: failedLogins || [],

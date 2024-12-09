@@ -48,8 +48,8 @@ export function useAdmin() {
         }
 
         setIsAdmin(true);
-        setAdminRole(adminData.role);
-        setPermissions(adminData.permissions);
+        setAdminRole(adminData.role as AdminRole);
+        setPermissions(adminData.permissions as AdminPermissions);
       } catch (error) {
         console.error('Error verifying admin status:', error);
         toast({

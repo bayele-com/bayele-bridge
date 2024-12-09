@@ -223,6 +223,39 @@ export type Database = {
           },
         ]
       }
+      auth_log: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          ip_address: string | null
+          success: boolean | null
+          type: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          ip_address?: string | null
+          success?: boolean | null
+          type: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          ip_address?: string | null
+          success?: boolean | null
+          type?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       classified_ads: {
         Row: {
           ad_type: string
@@ -717,6 +750,30 @@ export type Database = {
           },
         ]
       }
+      site_settings: {
+        Row: {
+          created_at: string
+          id: string
+          maintenance_mode: boolean | null
+          theme: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          maintenance_mode?: boolean | null
+          theme?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          maintenance_mode?: boolean | null
+          theme?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       admin_pending_ads: {
@@ -775,6 +832,10 @@ export type Database = {
       }
     }
     Functions: {
+      get_table_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
       insert_neighborhoods: {
         Args: Record<PropertyKey, never>
         Returns: undefined

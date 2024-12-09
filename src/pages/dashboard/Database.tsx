@@ -3,18 +3,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Database as DatabaseIcon, Table, HardDrive } from "lucide-react";
 
+interface TableStats {
+  total_rows: number;
+  total_size: string;
+}
+
 export default function Database() {
   const { data: dbStats, isLoading } = useQuery({
     queryKey: ["database-stats"],
     queryFn: async () => {
-      const { data: tableStats } = await supabase
+      const { data } = await supabase
         .rpc('get_table_stats')
         .single();
 
-      return tableStats || {
-        total_rows: 0,
-        total_size: '0 MB',
-      };
+      return data as TableStats;
     },
   });
 

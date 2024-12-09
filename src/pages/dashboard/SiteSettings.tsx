@@ -1,21 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Settings as SettingsIcon, Globe, Palette } from "lucide-react";
+import { Loader2, Settings, Globe, Moon } from "lucide-react";
+
+interface SiteSettings {
+  id: string;
+  maintenance_mode: boolean;
+  theme: string;
+}
 
 export default function SiteSettings() {
-  const { data: siteSettings, isLoading } = useQuery({
+  const { data: settings, isLoading } = useQuery({
     queryKey: ["site-settings"],
     queryFn: async () => {
-      const { data: settings } = await supabase
+      const { data, error } = await supabase
         .from('site_settings')
         .select('*')
-        .single();
+        .single() as { data: SiteSettings | null; error: any };
 
-      return settings || {
-        maintenance_mode: false,
-        theme: 'light',
-      };
+      if (error) throw error;
+      return data;
     },
   });
 
@@ -35,13 +39,13 @@ export default function SiteSettings() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <SettingsIcon className="h-5 w-5" />
+              <Settings className="h-5 w-5" />
               General Settings
             </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Configure global site settings
+              Configure general site settings
             </p>
           </CardContent>
         </Card>
@@ -50,12 +54,12 @@ export default function SiteSettings() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Globe className="h-5 w-5" />
-              Localization
+              Maintenance Mode
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">
-              Manage languages and regional settings
+            <p className="text-sm font-semibold">
+              {settings?.maintenance_mode ? 'Enabled' : 'Disabled'}
             </p>
           </CardContent>
         </Card>
@@ -63,13 +67,13 @@ export default function SiteSettings() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Palette className="h-5 w-5" />
-              Theme Settings
+              <Moon className="h-5 w-5" />
+              Theme
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">
-              Customize site appearance
+            <p className="text-sm font-semibold capitalize">
+              {settings?.theme || 'light'}
             </p>
           </CardContent>
         </Card>
