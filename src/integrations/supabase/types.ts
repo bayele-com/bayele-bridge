@@ -651,28 +651,37 @@ export type Database = {
       }
       profiles: {
         Row: {
+          business_address: string | null
+          business_name: string | null
           created_at: string
           email: string
           full_name: string | null
           id: string
+          payment_details: Json | null
           updated_at: string
           user_type: Database["public"]["Enums"]["user_type"]
           whatsapp_number: string | null
         }
         Insert: {
+          business_address?: string | null
+          business_name?: string | null
           created_at?: string
           email: string
           full_name?: string | null
           id: string
+          payment_details?: Json | null
           updated_at?: string
           user_type: Database["public"]["Enums"]["user_type"]
           whatsapp_number?: string | null
         }
         Update: {
+          business_address?: string | null
+          business_name?: string | null
           created_at?: string
           email?: string
           full_name?: string | null
           id?: string
+          payment_details?: Json | null
           updated_at?: string
           user_type?: Database["public"]["Enums"]["user_type"]
           whatsapp_number?: string | null

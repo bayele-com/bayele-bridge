@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -20,6 +19,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { BusinessFields } from "@/components/dashboard/profile/BusinessFields";
+import { AffiliateFields } from "@/components/dashboard/profile/AffiliateFields";
+import { ProfileFormValues } from "@/components/dashboard/profile/types";
+import { Profile } from "@/types/database/profile";
 
 const baseProfileSchema = z.object({
   full_name: z.string().min(2, "Full name must be at least 2 characters"),
@@ -56,12 +59,11 @@ export default function Profile() {
         .single();
 
       if (error) throw error;
-      return data;
+      return data as Profile;
     },
     enabled: !!user?.id,
   });
 
-  // Choose schema based on user type
   const getValidationSchema = () => {
     switch (profile?.user_type) {
       case "business":
@@ -73,7 +75,7 @@ export default function Profile() {
     }
   };
 
-  const form = useForm({
+  const form = useForm<ProfileFormValues>({
     resolver: zodResolver(getValidationSchema()),
     defaultValues: {
       full_name: userProfile?.full_name || "",
@@ -88,7 +90,7 @@ export default function Profile() {
   });
 
   const updateProfileMutation = useMutation({
-    mutationFn: async (values: any) => {
+    mutationFn: async (values: ProfileFormValues) => {
       const { error } = await supabase
         .from("profiles")
         .update(values)
@@ -113,7 +115,7 @@ export default function Profile() {
     },
   });
 
-  const onSubmit = (values: any) => {
+  const onSubmit = (values: ProfileFormValues) => {
     updateProfileMutation.mutate(values);
   };
 
@@ -184,67 +186,11 @@ export default function Profile() {
                   />
 
                   {profile?.user_type === "business" && (
-                    <>
-                      <FormField
-                        control={form.control}
-                        name="business_name"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Business Name</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="business_address"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Business Address</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </>
+                    <BusinessFields form={form} />
                   )}
 
                   {profile?.user_type === "affiliate" && (
-                    <>
-                      <FormField
-                        control={form.control}
-                        name="payment_details.momo_number"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>MTN Mobile Money Number</FormLabel>
-                            <FormControl>
-                              <Input {...field} placeholder="+237" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="payment_details.om_number"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Orange Money Number (Optional)</FormLabel>
-                            <FormControl>
-                              <Input {...field} placeholder="+237" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </>
+                    <AffiliateFields form={form} />
                   )}
 
                   <Button 
