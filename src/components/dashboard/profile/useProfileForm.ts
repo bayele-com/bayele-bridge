@@ -45,25 +45,18 @@ export function useProfileForm() {
       whatsapp_number: userProfile?.whatsapp_number || "",
       business_name: userProfile?.business_name || "",
       business_address: userProfile?.business_address || "",
-      payment_details: userProfile?.payment_details || {
-        momo_number: "",
-        om_number: "",
-      },
+      payment_details: userProfile?.payment_details ? {
+        momo_number: userProfile.payment_details.momo_number || "",
+        om_number: userProfile.payment_details.om_number || "",
+      } : null,
     },
   });
 
   const updateProfileMutation = useMutation({
     mutationFn: async (values: ProfileFormValues) => {
-      const dbValues = {
-        ...values,
-        payment_details: values.payment_details ? {
-          ...values.payment_details,
-        } : null
-      };
-
       const { error } = await supabase
         .from("profiles")
-        .update(dbValues)
+        .update(values)
         .eq("id", user?.id);
 
       if (error) throw error;

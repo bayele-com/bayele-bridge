@@ -5,5 +5,8 @@ export interface ProfileFormValues {
   whatsapp_number?: string | null;
   business_name?: string;
   business_address?: string;
-  payment_details?: PaymentDetails;
+  payment_details?: {
+    momo_number: string;
+    om_number?: string;
+  } | null;
 }
