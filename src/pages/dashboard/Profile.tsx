@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,65 +9,112 @@ import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+const baseProfileSchema = z.object({
+  full_name: z.string().min(2, "Full name must be at least 2 characters"),
+  whatsapp_number: z
+    .string()
+    .regex(/^\+237[0-9]{9}$/, "Please enter a valid Cameroonian phone number")
+    .optional()
+    .nullable(),
+});
+
+const businessProfileSchema = baseProfileSchema.extend({
+  business_name: z.string().min(2, "Business name must be at least 2 characters"),
+  business_address: z.string().min(5, "Address must be at least 5 characters"),
+});
+
+const affiliateProfileSchema = baseProfileSchema.extend({
+  payment_details: z.object({
+    momo_number: z.string().regex(/^\+237[0-9]{9}$/, "Invalid MTN MoMo number"),
+    om_number: z.string().regex(/^\+237[0-9]{9}$/, "Invalid Orange Money number").optional(),
+  }).optional(),
+});
 
 export default function Profile() {
   const { user, profile } = useAuth();
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [formData, setFormData] = useState({
-    full_name: profile?.full_name || "",
-    whatsapp_number: profile?.whatsapp_number || "",
-  });
+  const queryClient = useQueryClient();
 
   const { data: userProfile, isLoading } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
-      console.log("Fetching user profile:", user?.id);
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", user?.id)
         .single();
 
-      if (error) {
-        console.error("Error fetching profile:", error);
-        throw error;
-      }
-
+      if (error) throw error;
       return data;
     },
     enabled: !!user?.id,
   });
 
-  const handleUpdateProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!user) return;
+  // Choose schema based on user type
+  const getValidationSchema = () => {
+    switch (profile?.user_type) {
+      case "business":
+        return businessProfileSchema;
+      case "affiliate":
+        return affiliateProfileSchema;
+      default:
+        return baseProfileSchema;
+    }
+  };
 
-    setIsUpdating(true);
-    try {
+  const form = useForm({
+    resolver: zodResolver(getValidationSchema()),
+    defaultValues: {
+      full_name: userProfile?.full_name || "",
+      whatsapp_number: userProfile?.whatsapp_number || "",
+      business_name: userProfile?.business_name || "",
+      business_address: userProfile?.business_address || "",
+      payment_details: userProfile?.payment_details || {
+        momo_number: "",
+        om_number: "",
+      },
+    },
+  });
+
+  const updateProfileMutation = useMutation({
+    mutationFn: async (values: any) => {
       const { error } = await supabase
         .from("profiles")
-        .update({
-          full_name: formData.full_name,
-          whatsapp_number: formData.whatsapp_number,
-        })
-        .eq("id", user.id);
+        .update(values)
+        .eq("id", user?.id);
 
       if (error) throw error;
-
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["profile", user?.id] });
       toast({
         title: "Profile updated",
         description: "Your profile has been updated successfully.",
       });
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error("Error updating profile:", error);
       toast({
         variant: "destructive",
         title: "Error",
         description: "Failed to update profile. Please try again.",
       });
-    } finally {
-      setIsUpdating(false);
-    }
+    },
+  });
+
+  const onSubmit = (values: any) => {
+    updateProfileMutation.mutate(values);
   };
 
   if (isLoading) {
@@ -96,53 +143,121 @@ export default function Profile() {
               <CardTitle>Personal Information</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleUpdateProfile} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={userProfile?.email || ""}
-                    disabled
-                  />
-                </div>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={userProfile?.email || ""}
+                      disabled
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="full_name">Full Name</Label>
-                  <Input
-                    id="full_name"
-                    value={formData.full_name}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        full_name: e.target.value,
-                      }))
-                    }
+                  <FormField
+                    control={form.control}
+                    name="full_name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Full Name</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="whatsapp">WhatsApp Number</Label>
-                  <Input
-                    id="whatsapp"
-                    value={formData.whatsapp_number}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        whatsapp_number: e.target.value,
-                      }))
-                    }
-                    placeholder="+237"
+                  <FormField
+                    control={form.control}
+                    name="whatsapp_number"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>WhatsApp Number</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="+237" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
 
-                <Button type="submit" disabled={isUpdating}>
-                  {isUpdating && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {profile?.user_type === "business" && (
+                    <>
+                      <FormField
+                        control={form.control}
+                        name="business_name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Business Name</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="business_address"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Business Address</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </>
                   )}
-                  Save Changes
-                </Button>
-              </form>
+
+                  {profile?.user_type === "affiliate" && (
+                    <>
+                      <FormField
+                        control={form.control}
+                        name="payment_details.momo_number"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>MTN Mobile Money Number</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder="+237" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="payment_details.om_number"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Orange Money Number (Optional)</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder="+237" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </>
+                  )}
+
+                  <Button 
+                    type="submit" 
+                    disabled={updateProfileMutation.isPending}
+                  >
+                    {updateProfileMutation.isPending && (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    Save Changes
+                  </Button>
+                </form>
+              </Form>
             </CardContent>
           </Card>
 
