@@ -1,16 +1,11 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { type Profile as ProfileType } from "@/types/database/profile";
 import { useAuth } from "@/contexts/AuthContext";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/components/ui/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -21,110 +16,11 @@ import {
 } from "@/components/ui/form";
 import { BusinessFields } from "@/components/dashboard/profile/BusinessFields";
 import { AffiliateFields } from "@/components/dashboard/profile/AffiliateFields";
-import { ProfileFormValues } from "@/components/dashboard/profile/types";
-import type { Profile as ProfileType } from "@/types/database/profile";
-
-const baseProfileSchema = z.object({
-  full_name: z.string().min(2, "Full name must be at least 2 characters"),
-  whatsapp_number: z
-    .string()
-    .regex(/^\+237[0-9]{9}$/, "Please enter a valid Cameroonian phone number")
-    .optional()
-    .nullable(),
-});
-
-const businessProfileSchema = baseProfileSchema.extend({
-  business_name: z.string().min(2, "Business name must be at least 2 characters"),
-  business_address: z.string().min(5, "Address must be at least 5 characters"),
-});
-
-const affiliateProfileSchema = baseProfileSchema.extend({
-  payment_details: z.object({
-    momo_number: z.string().regex(/^\+237[0-9]{9}$/, "Invalid MTN MoMo number"),
-    om_number: z.string().regex(/^\+237[0-9]{9}$/, "Invalid Orange Money number").optional(),
-  }).optional(),
-});
+import { useProfileForm } from "@/components/dashboard/profile/useProfileForm";
 
 export default function Profile() {
-  const { user, profile } = useAuth();
-  const queryClient = useQueryClient();
-
-  const { data: userProfile, isLoading } = useQuery({
-    queryKey: ["profile", user?.id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user?.id)
-        .single();
-
-      if (error) throw error;
-      return data as ProfileType;
-    },
-    enabled: !!user?.id,
-  });
-
-  const getValidationSchema = () => {
-    switch (profile?.user_type) {
-      case "business":
-        return businessProfileSchema;
-      case "affiliate":
-        return affiliateProfileSchema;
-      default:
-        return baseProfileSchema;
-    }
-  };
-
-  const form = useForm<ProfileFormValues>({
-    resolver: zodResolver(getValidationSchema()),
-    defaultValues: {
-      full_name: userProfile?.full_name || "",
-      whatsapp_number: userProfile?.whatsapp_number || "",
-      business_name: userProfile?.business_name || "",
-      business_address: userProfile?.business_address || "",
-      payment_details: userProfile?.payment_details || {
-        momo_number: "",
-        om_number: "",
-      },
-    },
-  });
-
-  const updateProfileMutation = useMutation({
-    mutationFn: async (values: ProfileFormValues) => {
-      const dbValues = {
-        ...values,
-        payment_details: values.payment_details ? {
-          ...values.payment_details,
-        } : null
-      };
-
-      const { error } = await supabase
-        .from("profiles")
-        .update(dbValues)
-        .eq("id", user?.id);
-
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["profile", user?.id] });
-      toast({
-        title: "Profile updated",
-        description: "Your profile has been updated successfully.",
-      });
-    },
-    onError: (error) => {
-      console.error("Error updating profile:", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to update profile. Please try again.",
-      });
-    },
-  });
-
-  const onSubmit = (values: ProfileFormValues) => {
-    updateProfileMutation.mutate(values);
-  };
+  const { profile } = useAuth();
+  const { form, userProfile, isLoading, onSubmit, updateProfileMutation } = useProfileForm();
 
   if (isLoading) {
     return (
