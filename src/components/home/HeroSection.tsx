@@ -28,16 +28,13 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-[600px] flex items-center justify-center px-4 py-20 mt-16">
+    <section className="relative min-h-[600px] flex items-center justify-center px-4 py-20 bg-orange-500">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.05] dark:opacity-[0.15]" />
       
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto text-center">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance">
-          Your All-in-One Marketplace
-        </h1>
-        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto text-balance">
+        <p className="text-xl text-white font-bold mb-8 max-w-2xl mx-auto text-balance">
           Find your perfect home, discover great products, and post classified ads all in one place.
         </p>
         
@@ -74,7 +71,7 @@ export function HeroSection() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
           <Button 
             variant="outline" 
-            className="flex flex-col items-center p-6 h-auto hover:bg-accent/10"
+            className="flex flex-col items-center p-6 h-auto hover:bg-accent/10 bg-white"
             asChild
           >
             <Link to="/find-house">
@@ -84,7 +81,7 @@ export function HeroSection() {
           </Button>
           <Button 
             variant="outline" 
-            className="flex flex-col items-center p-6 h-auto hover:bg-accent/10"
+            className="flex flex-col items-center p-6 h-auto hover:bg-accent/10 bg-white"
             asChild
           >
             <Link to="/list-property">
@@ -94,7 +91,7 @@ export function HeroSection() {
           </Button>
           <Button 
             variant="outline" 
-            className="flex flex-col items-center p-6 h-auto hover:bg-accent/10"
+            className="flex flex-col items-center p-6 h-auto hover:bg-accent/10 bg-white"
             asChild
           >
             <Link to="/marketplace">
@@ -104,7 +101,7 @@ export function HeroSection() {
           </Button>
           <Button 
             variant="outline" 
-            className="flex flex-col items-center p-6 h-auto hover:bg-accent/10"
+            className="flex flex-col items-center p-6 h-auto hover:bg-accent/10 bg-white"
             asChild
           >
             <Link to="/post-classified">
