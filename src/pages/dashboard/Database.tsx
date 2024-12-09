@@ -15,11 +15,15 @@ export default function Database() {
 
       if (error) throw error;
       
-      // Ensure the response matches our TableStats interface
-      return {
-        total_rows: Number(data.total_rows),
-        total_size: String(data.total_size)
-      } as TableStats;
+      // Safely parse the Json response
+      if (typeof data === 'object' && data !== null) {
+        return {
+          total_rows: Number(data.total_rows || 0),
+          total_size: String(data.total_size || '0 bytes')
+        } satisfies TableStats;
+      }
+      
+      throw new Error('Invalid response format from get_table_stats');
     },
   });
 

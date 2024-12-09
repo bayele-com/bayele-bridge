@@ -4,7 +4,7 @@ import { UserType } from './enums';
 export interface PaymentDetails {
   momo_number?: string;
   om_number?: string;
-  [key: string]: any; // Add index signature for Json compatibility
+  [key: string]: Json | undefined; // Make it compatible with Supabase's Json type
 }
 
 export interface Profile {
