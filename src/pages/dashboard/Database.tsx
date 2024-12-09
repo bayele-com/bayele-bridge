@@ -13,7 +13,8 @@ export default function Database() {
     queryKey: ["database-stats"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .rpc('get_table_stats');
+        .rpc('get_table_stats')
+        .single();
         
       if (error) throw error;
       
