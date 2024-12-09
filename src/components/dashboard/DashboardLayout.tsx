@@ -1,4 +1,5 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { DashboardSidebar } from "./DashboardSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { useAuth } from "@/contexts/AuthContext";
@@ -10,6 +11,13 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const { profile, isLoading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoading && !profile) {
+      navigate("/login");
+    }
+  }, [isLoading, profile, navigate]);
 
   if (isLoading) {
     return (
@@ -20,16 +28,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   if (!profile) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-2">Access Denied</h1>
-          <p className="text-muted-foreground">
-            Please log in to access the dashboard.
-          </p>
-        </div>
-      </div>
-    );
+    return null; // Return null since useEffect will handle the redirection
   }
 
   return (

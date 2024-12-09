@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -36,6 +37,13 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { profile } = useAuth();
+
+  useEffect(() => {
+    if (profile) {
+      navigate("/dashboard");
+    }
+  }, [profile, navigate]);
 
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
@@ -62,7 +70,7 @@ export default function Login() {
         description: "You have successfully logged in.",
       });
       
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       toast({
         title: "Error",
@@ -73,6 +81,10 @@ export default function Login() {
       setIsLoading(false);
     }
   };
+
+  if (profile) {
+    return null; // Return null since useEffect will handle the redirection
+  }
 
   return (
     <div className="container mx-auto px-4 py-16 flex justify-center items-center min-h-[calc(100vh-4rem)]">
