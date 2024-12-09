@@ -37,13 +37,14 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { profile } = useAuth();
+  const { user } = useAuth();
 
   useEffect(() => {
-    if (profile) {
+    if (user) {
+      console.log("User already logged in, redirecting to dashboard");
       navigate("/dashboard");
     }
-  }, [profile, navigate]);
+  }, [user, navigate]);
 
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
@@ -72,6 +73,7 @@ export default function Login() {
       
       navigate("/dashboard");
     } catch (error) {
+      console.error("Login error:", error);
       toast({
         title: "Error",
         description: "Invalid email or password. Please try again.",
@@ -82,8 +84,8 @@ export default function Login() {
     }
   };
 
-  if (profile) {
-    return null; // Return null since useEffect will handle the redirection
+  if (user) {
+    return null;
   }
 
   return (

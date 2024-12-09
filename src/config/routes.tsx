@@ -13,6 +13,7 @@ const SignUp = lazy(() => import("@/pages/SignUp"));
 const Login = lazy(() => import("@/pages/Login"));
 const HowItWorks = lazy(() => import("@/pages/HowItWorks"));
 const Overview = lazy(() => import("@/pages/dashboard/Overview"));
+const Profile = lazy(() => import("@/pages/dashboard/Profile"));
 const Products = lazy(() => import("@/pages/dashboard/Products"));
 const Orders = lazy(() => import("@/pages/dashboard/Orders"));
 const Settings = lazy(() => import("@/pages/dashboard/Settings"));
@@ -50,11 +51,17 @@ export const dashboardRoutes = [
   {
     path: "/dashboard",
     element: (
-      <AdminRoute>
-        <DashboardLayout>
-          <Overview />
-        </DashboardLayout>
-      </AdminRoute>
+      <DashboardLayout>
+        <Overview />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: "/dashboard/profile",
+    element: (
+      <DashboardLayout>
+        <Profile />
+      </DashboardLayout>
     ),
   },
   {

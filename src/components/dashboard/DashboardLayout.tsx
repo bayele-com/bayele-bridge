@@ -10,25 +10,31 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
-  const { profile, isLoading } = useAuth();
+  const { user, profile, isLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoading && !profile) {
+    if (!isLoading && !user) {
+      console.log("No user found, redirecting to login");
       navigate("/login");
+      return;
     }
-  }, [isLoading, profile, navigate]);
+
+    if (!isLoading && !profile) {
+      console.log("No profile found for user:", user?.id);
+    }
+  }, [isLoading, user, profile, navigate]);
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
 
-  if (!profile) {
-    return null; // Return null since useEffect will handle the redirection
+  if (!user) {
+    return null;
   }
 
   return (
