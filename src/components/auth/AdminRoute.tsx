@@ -3,6 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Loader2 } from 'lucide-react';
 import { AdminRole, AdminPermissions } from '@/types/database/admin';
+import { toast } from '@/components/ui/use-toast';
 
 interface AdminRouteProps {
   children: React.ReactNode;
@@ -19,11 +20,16 @@ export function AdminRoute({
   const location = useLocation();
 
   useEffect(() => {
-    // Log access attempts for security auditing
     if (!isLoading && !isAdmin) {
       console.warn('Unauthorized admin access attempt:', {
         path: location.pathname,
         timestamp: new Date().toISOString(),
+      });
+      
+      toast({
+        variant: "destructive",
+        title: "Access Denied",
+        description: "You don't have permission to access this area.",
       });
     }
   }, [isLoading, isAdmin, location]);
@@ -40,11 +46,28 @@ export function AdminRoute({
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (requiredRole && adminRole !== requiredRole && adminRole !== 'super_admin') {
+  // Check for super_admin role first
+  if (adminRole === 'super_admin') {
+    return <>{children}</>;
+  }
+
+  // Then check for specific required role
+  if (requiredRole && adminRole !== requiredRole) {
+    toast({
+      variant: "destructive",
+      title: "Access Denied",
+      description: "You don't have the required role to access this area.",
+    });
     return <Navigate to="/dashboard" replace />;
   }
 
+  // Finally check for specific permission
   if (requiredPermission && !checkPermission(requiredPermission)) {
+    toast({
+      variant: "destructive",
+      title: "Access Denied",
+      description: "You don't have the required permission to access this area.",
+    });
     return <Navigate to="/dashboard" replace />;
   }
 

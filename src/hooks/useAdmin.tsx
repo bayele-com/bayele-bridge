@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { AdminRole, AdminPermissions } from '@/types/database/admin';
 import { useToast } from '@/components/ui/use-toast';
-import { checkAdminStatus } from '@/utils/adminUtils';
-import { useAdminPermissions } from './useAdminPermissions';
+import { supabase } from '@/integrations/supabase/client';
 
 export function useAdmin() {
   const { user } = useAuth();
@@ -26,12 +25,33 @@ export function useAdmin() {
       }
 
       try {
-        const { isAdmin, adminRole, permissions } = await checkAdminStatus(user.id);
-        setIsAdmin(isAdmin);
-        setAdminRole(adminRole);
-        setPermissions(permissions);
+        // First check if user exists in admin_permissions table
+        const { data: adminData, error: adminError } = await supabase
+          .from('admin_permissions')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+
+        if (adminError) {
+          console.error('Error checking admin status:', adminError);
+          setIsAdmin(false);
+          setAdminRole(null);
+          setPermissions(null);
+          return;
+        }
+
+        if (!adminData) {
+          setIsAdmin(false);
+          setAdminRole(null);
+          setPermissions(null);
+          return;
+        }
+
+        setIsAdmin(true);
+        setAdminRole(adminData.role);
+        setPermissions(adminData.permissions);
       } catch (error) {
-        console.error('Error checking admin status:', error);
+        console.error('Error verifying admin status:', error);
         toast({
           variant: "destructive",
           title: "Error",
@@ -45,7 +65,11 @@ export function useAdmin() {
     verifyAdminStatus();
   }, [user, toast]);
 
-  const { checkPermission } = useAdminPermissions(permissions, adminRole);
+  const checkPermission = (permission: keyof AdminPermissions): boolean => {
+    if (!permissions) return false;
+    if (adminRole === 'super_admin') return true;
+    return !!permissions[permission];
+  };
 
   const requireAdmin = () => {
     if (!isLoading && !isAdmin) {
