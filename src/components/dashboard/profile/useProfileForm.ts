@@ -46,8 +46,8 @@ export function useProfileForm() {
       business_name: userProfile?.business_name || "",
       business_address: userProfile?.business_address || "",
       payment_details: userProfile?.payment_details ? {
-        momo_number: userProfile.payment_details.momo_number || "",
-        om_number: userProfile.payment_details.om_number || "",
+        momo_number: String(userProfile.payment_details.momo_number || ""),
+        om_number: String(userProfile.payment_details.om_number || ""),
       } : null,
     },
   });
