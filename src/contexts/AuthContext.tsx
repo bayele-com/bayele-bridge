@@ -55,7 +55,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      setProfile(data);
+      // Ensure the profile data matches our Profile type
+      const profileData: Profile = {
+        ...data,
+        payment_details: data.payment_details || null
+      };
+
+      setProfile(profileData);
     } finally {
       setIsLoading(false);
     }

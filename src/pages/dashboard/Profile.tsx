@@ -22,7 +22,7 @@ import {
 import { BusinessFields } from "@/components/dashboard/profile/BusinessFields";
 import { AffiliateFields } from "@/components/dashboard/profile/AffiliateFields";
 import { ProfileFormValues } from "@/components/dashboard/profile/types";
-import { Profile } from "@/types/database/profile";
+import type { Profile as ProfileType } from "@/types/database/profile";
 
 const baseProfileSchema = z.object({
   full_name: z.string().min(2, "Full name must be at least 2 characters"),
@@ -59,7 +59,7 @@ export default function Profile() {
         .single();
 
       if (error) throw error;
-      return data as Profile;
+      return data as ProfileType;
     },
     enabled: !!user?.id,
   });
@@ -91,9 +91,16 @@ export default function Profile() {
 
   const updateProfileMutation = useMutation({
     mutationFn: async (values: ProfileFormValues) => {
+      const dbValues = {
+        ...values,
+        payment_details: values.payment_details ? {
+          ...values.payment_details,
+        } : null
+      };
+
       const { error } = await supabase
         .from("profiles")
-        .update(values)
+        .update(dbValues)
         .eq("id", user?.id);
 
       if (error) throw error;

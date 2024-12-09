@@ -14,7 +14,12 @@ export default function Database() {
         .single();
 
       if (error) throw error;
-      return data as TableStats;
+      
+      // Ensure the response matches our TableStats interface
+      return {
+        total_rows: Number(data.total_rows),
+        total_size: String(data.total_size)
+      } as TableStats;
     },
   });
 

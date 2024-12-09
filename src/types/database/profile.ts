@@ -1,8 +1,10 @@
+import { Json } from '@/integrations/supabase/types';
 import { UserType } from './enums';
 
 export interface PaymentDetails {
   momo_number?: string;
   om_number?: string;
+  [key: string]: any; // Add index signature for Json compatibility
 }
 
 export interface Profile {
