@@ -25,6 +25,9 @@ const Properties = lazy(() => import("@/pages/dashboard/Properties"));
 const Businesses = lazy(() => import("@/pages/dashboard/Businesses"));
 const Analytics = lazy(() => import("@/pages/dashboard/Analytics"));
 const Affiliates = lazy(() => import("@/pages/dashboard/Affiliates"));
+const Security = lazy(() => import("@/pages/dashboard/Security"));
+const Database = lazy(() => import("@/pages/dashboard/Database"));
+const SiteSettings = lazy(() => import("@/pages/dashboard/SiteSettings"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const Search = lazy(() => import("@/pages/Search"));
 
@@ -140,6 +143,36 @@ export const dashboardRoutes = [
       <AdminRoute requiredPermission="canViewAnalytics">
         <DashboardLayout>
           <Analytics />
+        </DashboardLayout>
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/dashboard/security",
+    element: (
+      <AdminRoute requiredRole="super_admin">
+        <DashboardLayout>
+          <Security />
+        </DashboardLayout>
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/dashboard/database",
+    element: (
+      <AdminRoute requiredRole="super_admin">
+        <DashboardLayout>
+          <Database />
+        </DashboardLayout>
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/dashboard/site-settings",
+    element: (
+      <AdminRoute requiredRole="super_admin">
+        <DashboardLayout>
+          <SiteSettings />
         </DashboardLayout>
       </AdminRoute>
     ),

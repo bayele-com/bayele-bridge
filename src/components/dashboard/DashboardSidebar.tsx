@@ -23,10 +23,15 @@ import {
   Home as HomeIcon,
   AlertCircle,
   CheckCircle2,
+  Shield,
+  Database,
+  Globe,
 } from "lucide-react";
+import { useAdmin } from "@/hooks/useAdmin";
 
 export function DashboardSidebar() {
   const { user } = useAuth();
+  const { isAdmin, adminRole } = useAdmin();
   const userType = user?.user_metadata?.user_type;
 
   const getMenuItems = () => {
@@ -91,6 +96,24 @@ export function DashboardSidebar() {
       },
     ];
 
+    const superAdminItems = [
+      {
+        title: "Security",
+        icon: Shield,
+        href: "/dashboard/security",
+      },
+      {
+        title: "Database",
+        icon: Database,
+        href: "/dashboard/database",
+      },
+      {
+        title: "Site Settings",
+        icon: Globe,
+        href: "/dashboard/site-settings",
+      },
+    ];
+
     const businessItems = [
       {
         title: "Products",
@@ -124,6 +147,8 @@ export function DashboardSidebar() {
 
     switch (userType) {
       case "super_admin":
+        return [...commonItems, ...adminItems, ...superAdminItems];
+      case "admin":
         return [...commonItems, ...adminItems];
       case "business":
         return [...commonItems, ...businessItems];
