@@ -30,7 +30,7 @@ export function Navigation() {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-sm">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background border-b">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -48,7 +48,7 @@ export function Navigation() {
               <Link
                 key={item.href}
                 to={item.href}
-                className="text-sm font-medium text-gray-600 hover:text-[#0EA5E9] transition-colors"
+                className="text-sm font-medium text-muted-foreground hover:text-accent transition-colors"
               >
                 {item.label}
               </Link>
@@ -59,7 +59,7 @@ export function Navigation() {
           <div className="hidden md:flex md:items-center md:space-x-4">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-gray-600">
+                <Button variant="ghost" size="icon">
                   <Globe className="h-5 w-5" />
                 </Button>
               </DropdownMenuTrigger>
@@ -90,10 +90,10 @@ export function Navigation() {
               </DropdownMenu>
             ) : (
               <>
-                <Button variant="ghost" asChild className="text-gray-600">
+                <Button variant="ghost" asChild>
                   <Link to="/login">Log In</Link>
                 </Button>
-                <Button asChild className="bg-[#0EA5E9] hover:bg-[#0EA5E9]/90">
+                <Button asChild>
                   <Link to="/signup">Sign Up</Link>
                 </Button>
               </>
@@ -117,7 +117,7 @@ export function Navigation() {
                     <Link
                       key={item.href}
                       to={item.href}
-                      className="text-sm font-medium transition-colors hover:text-[#0EA5E9]"
+                      className="text-sm font-medium transition-colors hover:text-accent"
                       onClick={() => setIsOpen(false)}
                     >
                       {item.label}
@@ -128,14 +128,14 @@ export function Navigation() {
                     <>
                       <Link
                         to="/dashboard"
-                        className="text-sm font-medium transition-colors hover:text-[#0EA5E9]"
+                        className="text-sm font-medium transition-colors hover:text-accent"
                         onClick={() => setIsOpen(false)}
                       >
                         Dashboard
                       </Link>
                       <Link
                         to="/profile"
-                        className="text-sm font-medium transition-colors hover:text-[#0EA5E9]"
+                        className="text-sm font-medium transition-colors hover:text-accent"
                         onClick={() => setIsOpen(false)}
                       >
                         Profile
@@ -155,14 +155,14 @@ export function Navigation() {
                     <>
                       <Link
                         to="/login"
-                        className="text-sm font-medium transition-colors hover:text-[#0EA5E9]"
+                        className="text-sm font-medium transition-colors hover:text-accent"
                         onClick={() => setIsOpen(false)}
                       >
                         Log In
                       </Link>
                       <Link
                         to="/signup"
-                        className="text-sm font-medium transition-colors hover:text-[#0EA5E9]"
+                        className="text-sm font-medium transition-colors hover:text-accent"
                         onClick={() => setIsOpen(false)}
                       >
                         Sign Up

@@ -29,22 +29,15 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-[600px] flex items-center justify-center px-4 py-20 mt-16">
-      {/* Background Image with Overlay */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: "url('/lovable-uploads/15e125db-fbcb-4198-93b7-209f970dd953.png')",
-        }}
-      >
-        <div className="absolute inset-0 bg-black/50" />
-      </div>
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-[0.05] dark:opacity-[0.15]" />
       
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto text-center">
-        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+        <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance">
           Your All-in-One Marketplace
         </h1>
-        <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto text-balance">
           Find your perfect home, discover great products, and post classified ads all in one place.
         </p>
         
@@ -52,12 +45,12 @@ export function HeroSection() {
         <div className="max-w-2xl mx-auto mb-8">
           <div className="relative flex items-center">
             <div className="absolute left-4 flex items-center gap-2">
-              <Search className="h-5 w-5 text-gray-400" />
+              <Search className="h-5 w-5 text-muted-foreground" />
             </div>
             <input
               type="text"
               placeholder="Search for properties, products, or services..."
-              className="w-full h-14 pl-12 pr-32 rounded-full border-2 border-white/20 bg-white/10 backdrop-blur-md text-white placeholder:text-white/60 focus:outline-none focus:border-[#0EA5E9] focus:ring-2 focus:ring-[#0EA5E9]/50"
+              className="w-full h-14 pl-12 pr-32 rounded-full border bg-background shadow-sm focus:ring-2 focus:ring-accent focus:border-accent"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={handleKeyPress}
@@ -66,14 +59,11 @@ export function HeroSection() {
               <Button
                 size="icon"
                 variant="ghost"
-                className="text-white hover:bg-white/20"
+                className="hover:bg-accent/10"
               >
                 <Camera className="h-5 w-5" />
               </Button>
-              <Button 
-                className="bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white px-6"
-                onClick={handleSearch}
-              >
+              <Button onClick={handleSearch}>
                 Search
               </Button>
             </div>
@@ -84,7 +74,7 @@ export function HeroSection() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
           <Button 
             variant="outline" 
-            className="flex flex-col items-center p-6 h-auto bg-white/10 hover:bg-white/20 backdrop-blur-md border-white/20 text-white"
+            className="flex flex-col items-center p-6 h-auto hover:bg-accent/10"
             asChild
           >
             <Link to="/find-house">
@@ -94,7 +84,7 @@ export function HeroSection() {
           </Button>
           <Button 
             variant="outline" 
-            className="flex flex-col items-center p-6 h-auto bg-white/10 hover:bg-white/20 backdrop-blur-md border-white/20 text-white"
+            className="flex flex-col items-center p-6 h-auto hover:bg-accent/10"
             asChild
           >
             <Link to="/list-property">
@@ -104,7 +94,7 @@ export function HeroSection() {
           </Button>
           <Button 
             variant="outline" 
-            className="flex flex-col items-center p-6 h-auto bg-white/10 hover:bg-white/20 backdrop-blur-md border-white/20 text-white"
+            className="flex flex-col items-center p-6 h-auto hover:bg-accent/10"
             asChild
           >
             <Link to="/marketplace">
@@ -114,7 +104,7 @@ export function HeroSection() {
           </Button>
           <Button 
             variant="outline" 
-            className="flex flex-col items-center p-6 h-auto bg-white/10 hover:bg-white/20 backdrop-blur-md border-white/20 text-white"
+            className="flex flex-col items-center p-6 h-auto hover:bg-accent/10"
             asChild
           >
             <Link to="/post-classified">
