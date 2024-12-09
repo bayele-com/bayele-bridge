@@ -12,10 +12,12 @@ export default function Database() {
   const { data: dbStats, isLoading } = useQuery({
     queryKey: ["database-stats"],
     queryFn: async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .rpc('get_table_stats')
         .single();
-
+        
+      if (error) throw error;
+      
       return data as TableStats;
     },
   });
