@@ -15,8 +15,8 @@ export default function Database() {
 
       if (error) throw error;
       
-      // Safely parse the Json response
-      if (typeof data === 'object' && data !== null) {
+      // Type guard to ensure data is an object with the expected properties
+      if (data && typeof data === 'object' && 'total_rows' in data && 'total_size' in data) {
         return {
           total_rows: Number(data.total_rows || 0),
           total_size: String(data.total_size || '0 bytes')

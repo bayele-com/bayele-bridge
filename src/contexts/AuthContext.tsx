@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthContextType, Profile } from "@/types/auth";
+import { Json } from "@/integrations/supabase/types";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -55,14 +56,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
+      // Type guard to ensure payment_details is an object
+      const paymentDetails = data.payment_details && typeof data.payment_details === 'object' 
+        ? data.payment_details as Record<string, Json>
+        : null;
+
       // Ensure the profile data matches our Profile type
       const profileData: Profile = {
         ...data,
-        payment_details: data.payment_details ? {
-          momo_number: data.payment_details.momo_number,
-          om_number: data.payment_details.om_number,
-          ...data.payment_details // Include any additional fields
-        } : null
+        payment_details: paymentDetails
       };
 
       setProfile(profileData);

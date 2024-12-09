@@ -4,7 +4,7 @@ import { UserType } from './enums';
 export interface PaymentDetails {
   momo_number?: string;
   om_number?: string;
-  [key: string]: Json | undefined; // Make it compatible with Supabase's Json type
+  [key: string]: Json | undefined;
 }
 
 export interface Profile {
@@ -17,5 +17,5 @@ export interface Profile {
   updated_at: string;
   business_name?: string | null;
   business_address?: string | null;
-  payment_details?: PaymentDetails | null;
+  payment_details?: Record<string, Json> | null;
 }
